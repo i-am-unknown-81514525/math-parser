@@ -24,7 +24,7 @@ namespace math_parser.tokenizer
             return stream.Peek() == content[0];
         }
 
-        public CharacterStream Parse(CharacterStream stream)
+        public (SyntaxDiscardResult, CharacterStream) Parse(CharacterStream stream)
         {
             if (content.Length == 0) return stream;
             if (stream.Take(content.Length) == content)
