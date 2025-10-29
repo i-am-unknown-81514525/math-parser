@@ -44,5 +44,9 @@ namespace math_parser.utils
         {
             return this.content.Substring(startIndex);
         }
+
+        public string AsRaw() {
+            return this.content;
+        }
     }
 }
