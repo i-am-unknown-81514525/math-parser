@@ -34,5 +34,15 @@ namespace math_parser.utils
         {
             return new SharedImmutableString(v);
         }
+
+        public string SubString(int startIndex, int length)
+        {
+            return this.content.Substring(startIndex, length);
+        }
+
+        public string SubString(int startIndex)
+        {
+            return this.content.Substring(startIndex);
+        }
     }
 }

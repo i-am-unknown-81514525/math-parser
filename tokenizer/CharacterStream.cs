@@ -28,5 +28,22 @@ namespace math_parser.tokenizer
             Advance();
             return v;
         }
+
+        public string Peek(int amount)
+        {
+            return this._base.SubString(ptr, amount);
+        }
+        
+        public void Advance(int amount)
+        {
+            ptr += amount;
+        }
+
+        public string Take(int amount)
+        {
+            string v = Peek(amount);
+            Advance(amount);
+            return v;
+        }
     }
 }
