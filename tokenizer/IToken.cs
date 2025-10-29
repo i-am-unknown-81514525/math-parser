@@ -8,7 +8,7 @@ namespace math_parser.tokenizer
 
     public interface IToken<T> : IBaseToken where T : ParseResult
     {
-        (T curr, CharacterStream other) Parse(CharacterStream stream);
+        new (T curr, CharacterStream other) Parse(CharacterStream stream);
     }
 
     public interface IBaseToken
