@@ -26,12 +26,22 @@ namespace math_parser.tokenizer
 
         public CharacterStream Parse(CharacterStream stream)
         {
-            throw new NotImplementedException();
+            if (content.Length == 0) return stream;
+            if (stream.Take(content.Length) == content)
+            {
+                return stream;
+            }
+            throw new TokenParseBacktrackException("Not valid path");
         }
 
         public CharacterStream PartialParse(CharacterStream stream)
         {
-            throw new NotImplementedException();
+            if (content.Length == 0) return stream;
+            if (stream.Take() == content[0])
+            {
+                return stream;
+            }
+            throw new TokenParseBacktrackException("Not valid path");
         }
     }
 }
