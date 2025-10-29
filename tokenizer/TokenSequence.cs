@@ -13,7 +13,7 @@ namespace math_parser.tokenizer
         }
     }
 
-    public class TokenSequence<S> : IEnumerable<IToken<S>>, IToken<GroupResult<S>> where S : ParseResult
+    public class TokenSequence<S> : Token<GroupResult<S>>, IEnumerable<IToken<S>> where S : ParseResult
     {
         private List<IToken<S>> tokens = new List<IToken<S>>();
         private bool _writable = true;
@@ -69,7 +69,7 @@ namespace math_parser.tokenizer
             return new TokenSequence<S>(tokens.ToArray());
         }
 
-        public (GroupResult<S>, CharacterStream) Parse(CharacterStream stream)
+        public override (GroupResult<S>, CharacterStream) Parse(CharacterStream stream)
         {
             MakeImmutable();
             List<S> r = new List<S>();
@@ -79,7 +79,8 @@ namespace math_parser.tokenizer
             }
             return (new GroupResult<S>(r), stream);
         }
-        public bool CanParse(CharacterStream stream)
+
+        public override bool CanParse(CharacterStream stream)
         {
             MakeImmutable();
             CharacterStream clone = stream.Fork();
@@ -90,7 +91,7 @@ namespace math_parser.tokenizer
             return true;
         }
 
-        public CharacterStream PartialParse(CharacterStream stream)
+        public override CharacterStream PartialParse(CharacterStream stream)
         {
             MakeImmutable();
             CharacterStream ori = stream.Fork();
@@ -104,7 +105,7 @@ namespace math_parser.tokenizer
             }
             return stream;
         }
-        public bool CanPartialParse(CharacterStream stream)
+        public override bool CanPartialParse(CharacterStream stream)
         {
             MakeImmutable();
             CharacterStream ori = stream.Fork();

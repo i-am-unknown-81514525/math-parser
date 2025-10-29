@@ -2,7 +2,7 @@ using System;
 
 namespace math_parser.tokenizer
 {
-    public class Literal : IToken
+    public class Literal : Token
     {
         private string content;
 
@@ -12,19 +12,19 @@ namespace math_parser.tokenizer
             this.content = value;
         }
 
-        public bool CanParse(CharacterStream stream)
+        public override bool CanParse(CharacterStream stream)
         {
             if (content.Length == 0) return true;
             return stream.Peek(content.Length) == content;
         }
 
-        public bool CanPartialParse(CharacterStream stream)
+        public override bool CanPartialParse(CharacterStream stream)
         {
             if (content.Length == 0) return true;
             return stream.Peek() == content[0];
         }
 
-        public (SyntaxDiscardResult, CharacterStream) Parse(CharacterStream stream)
+        public override (SyntaxDiscardResult, CharacterStream) Parse(CharacterStream stream)
         {
             if (content.Length == 0) return stream;
             if (stream.Take(content.Length) == content)
@@ -34,7 +34,7 @@ namespace math_parser.tokenizer
             throw new TokenParseBacktrackException("Not valid path");
         }
 
-        public CharacterStream PartialParse(CharacterStream stream)
+        public override CharacterStream PartialParse(CharacterStream stream)
         {
             if (content.Length == 0) return stream;
             if (stream.Take() == content[0])
