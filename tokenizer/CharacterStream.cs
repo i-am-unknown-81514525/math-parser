@@ -2,10 +2,10 @@ using math_parser.utils;
 
 namespace math_parser.tokenizer
 {
-    public class CharacterStream : IEquatable<CharacterStream>
+    public class CharacterStream : System.IEquatable<CharacterStream>
     {
         public readonly SharedImmutableString _base;
-        public readonly int ptr = 0;
+        public int ptr { get; internal set; } = 0;
 
         public CharacterStream(SharedImmutableString str)
         {
@@ -15,7 +15,7 @@ namespace math_parser.tokenizer
         public CharacterStream(SharedImmutableString str, int ptr)
         {
             this._base = str;
-            ptr = ptr;
+            this.ptr = ptr;
         }
 
         public char Peek()
@@ -71,6 +71,23 @@ namespace math_parser.tokenizer
         public CharacterStream Clone()
         {
             return new CharacterStream(_base, ptr);
+        }
+
+        public bool Equals(CharacterStream other)
+        {
+            return this == other;
+        }
+
+        public override bool Equals(object o)
+        {
+            if (o is null && this is null) return true;
+            if (o as CharacterStream is null) return false;
+            return this == (o as CharacterStream);
+        }
+
+        public override int GetHashCode()
+        {
+            return _base.GetHashCode() ^ ptr.GetHashCode();
         }
     }
 }
