@@ -3,24 +3,34 @@ using System.Linq;
 
 namespace math_parser.tokenizer
 {
-    public class TokenSequence : IEnumerable<IToken>, IToken
+    public class GroupResult<S> : ParseResult where S : ParseResult
     {
-        private List<IToken> tokens = new List<IToken>();
+        public S[] parseResult;
+
+        public GroupResult(IEnumerable<S> r)
+        {
+            parseResult = r.ToArray();
+        }
+    }
+
+    public class TokenSequence<S> : IEnumerable<IToken<S>>, IToken<GroupResult<S>> where S : ParseResult
+    {
+        private List<IToken<S>> tokens = new List<IToken<S>>();
         private bool _writable = true;
-        private IToken[] immutable_tokens;
+        private IToken<S>[] immutable_tokens;
 
         public TokenSequence()
         {
 
         }
         
-        public TokenSequence(params IToken[] tokens)
+        public TokenSequence(params IToken<S>[] tokens)
         {
-            immutable_tokens = (IToken[])tokens.Clone();
+            immutable_tokens = (IToken<S>[])tokens.Clone();
             _writable = false;
         }
 
-        public void Add(IToken token)
+        public void Add(IToken<S> token)
         {
             tokens.Add(token);
         }
@@ -33,15 +43,15 @@ namespace math_parser.tokenizer
             tokens = null;
         }
 
-        public IToken this[int idx]
+        public IToken<S> this[int idx]
         {
             get => immutable_tokens[idx];
         }
 
-        public IEnumerator<IToken> GetEnumerator()
+        public IEnumerator<IToken<S>> GetEnumerator()
         {
             MakeImmutable();
-            return ((IEnumerable<IToken>)immutable_tokens).GetEnumerator();
+            return ((IEnumerable<IToken<S>>)immutable_tokens).GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -49,23 +59,25 @@ namespace math_parser.tokenizer
             return GetEnumerator();
         }
 
-        public static implicit operator TokenSequence(List<IToken> tokens)
+        public static implicit operator TokenSequence<S>(List<IToken<S>> tokens)
         {
-            return new TokenSequence(tokens.ToArray());
+            return new TokenSequence<S>(tokens.ToArray());
         }
 
-        public static implicit operator TokenSequence(IToken[] tokens)
+        public static implicit operator TokenSequence<S>(IToken<S>[] tokens)
         {
-            return new TokenSequence(tokens.ToArray());
+            return new TokenSequence<S>(tokens.ToArray());
         }
 
-        public CharacterStream Parse(CharacterStream stream)
+        public (GroupResult<S>, CharacterStream) Parse(CharacterStream stream)
         {
             MakeImmutable();
-            foreach (IToken token in immutable_tokens)
+            List<S> r = new List<S>();
+            foreach (IToken<S> token in immutable_tokens)
             {
-                token.Parse(stream);
+                r.Add(token.Parse(stream).Item1);
             }
+            return (new GroupResult<S>(r), stream);
         }
         public bool CanParse(CharacterStream stream)
         {
@@ -73,8 +85,9 @@ namespace math_parser.tokenizer
             CharacterStream clone = stream.Fork();
             foreach (IToken token in immutable_tokens)
             {
-                token.Parse(clone);
+                if (!token.CanParse(clone)) return false;
             }
+            return true;
         }
 
         public CharacterStream PartialParse(CharacterStream stream)
