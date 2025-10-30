@@ -90,6 +90,6 @@ namespace math_parser.tokenizer
             return _base.GetHashCode() ^ ptr.GetHashCode();
         }
 
-        public static implicit operator (SyntaxDiscardResult, CharacterStream)(CharacterStream stream) => (SyntaxDiscardResult.Empty, stream);
+        // public static implicit operator (SyntaxDiscardResult, CharacterStream)(CharacterStream stream) => (SyntaxDiscardResult.Empty, stream);
     }
 }

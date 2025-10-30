@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace math_parser.tokenizer
 {
-    public class Or : Token
+    public class Or<S> : Token<S> where S : ParseResult
     {
-        IBaseToken[] options;
+        IToken<S>[] options;
 
-        public Or(params IBaseToken[] options)
+        public Or(params IToken<S>[] options)
         {
             this.options = options.ToArray();
         }
@@ -38,15 +38,14 @@ namespace math_parser.tokenizer
             }
         }
 
-        public override (SyntaxDiscardResult, CharacterStream) Parse(CharacterStream stream)
+        public override (S, CharacterStream) Parse(CharacterStream stream)
         {
-            foreach (IBaseToken option in options)
+            foreach (IToken<S> option in options)
             {
                 CharacterStream inner = stream.Clone();
                 try
                 {
-                    option.Parse(inner);
-                    return inner;
+                    return option.Parse(inner);
                 }
                 catch (TokenParseException)
                 {
@@ -58,7 +57,7 @@ namespace math_parser.tokenizer
 
         public override CharacterStream PartialParse(CharacterStream stream)
         {
-            foreach (IBaseToken option in options)
+            foreach (IToken<S> option in options)
             {
                 CharacterStream inner = stream.Clone();
                 try
