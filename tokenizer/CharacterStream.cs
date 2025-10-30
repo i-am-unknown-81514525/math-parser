@@ -1,3 +1,4 @@
+using System;
 using math_parser.utils;
 
 namespace math_parser.tokenizer
@@ -88,6 +89,20 @@ namespace math_parser.tokenizer
         public override int GetHashCode()
         {
             return _base.GetHashCode() ^ ptr.GetHashCode();
+        }
+
+        public CharacterStream JumpForwardTo(CharacterStream src)
+        {
+            if (object.ReferenceEquals(src._base, this._base))
+            {
+                throw new InvalidOperationException("Not the same string");
+            }
+            if (this.ptr > src.ptr)
+            {
+                throw new InvalidOperationException("You cannot jump backward");
+            }
+            this.ptr = src.ptr;
+            return this;
         }
 
         // public static implicit operator (SyntaxDiscardResult, CharacterStream)(CharacterStream stream) => (SyntaxDiscardResult.Empty, stream);

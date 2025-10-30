@@ -1,6 +1,6 @@
 namespace math_parser.tokenizer
 {
-    public class ParseResult
+    public interface ParseResult
     {
         
     }
