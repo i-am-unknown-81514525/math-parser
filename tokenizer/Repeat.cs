@@ -35,6 +35,9 @@ namespace math_parser.tokenizer
                 return amount - 1;
             }
         }
+
+
+        public static implicit operator Amount(int v) => new Amount(v);
     }
 
     public class ParseResultList<S> : List<S>, ParseResult where S : ParseResult {}
@@ -86,50 +89,55 @@ namespace math_parser.tokenizer
             return token.CanPartialParse(stream);
         }
 
-        public override (ParseResultList<S>, CharacterStream) Parse(CharacterStream stream)
+        public override ParseResultList<S> Parse(CharacterStream stream)
         {
-            CharacterStream original = stream;
             ParseResultList<S> results = new ParseResultList<S>();
-            CharacterStream last;
+            CharacterStream last = stream.Clone();
+            CharacterStream curr = stream.Clone();
             for (uint i = 0; i < min.value; i++)
             {
                 S v;
-                (v, stream) = token.Parse(stream);
+                v = token.Parse(stream);
                 results.Add(v);
             }
+            last.JumpForwardTo(stream);
+            curr.JumpForwardTo(stream);
             if (max.isUnbound)
             {
                 while (true)
                 {
-                    last = stream;
                     try
                     {
                         S v;
-                        (v, stream) = token.Parse(stream);
+                        v = token.Parse(curr);
                         results.Add(v);
+                        last.JumpForwardTo(curr);
                     }
                     catch (TokenParseException)
                     {
-                        return (results, original.JumpForwardTo(last));
+                        stream.JumpForwardTo(last);
+                        return results;
                     }
                 }
                 throw new InvalidOperationException("Wtf?");
             }
             for (uint i = (uint)min.value; i < max.value; i++)
             {
-                last = stream.Clone();
                 try
                 {
                     S v;
-                    (v, stream) = token.Parse(stream);
+                    v = token.Parse(curr);
                     results.Add(v);
+                    last.JumpForwardTo(curr);
                 }
                 catch (TokenParseException)
                 {
-                    return (results, original.JumpForwardTo(last));
+                    stream.JumpForwardTo(last);
+                    return results;
                 }
             }
-            return (results, original.JumpForwardTo(stream));
+            stream.JumpForwardTo(last);
+            return results;
         }
 
         public override CharacterStream PartialParse(CharacterStream stream)
