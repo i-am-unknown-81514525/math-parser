@@ -3,12 +3,10 @@ using System.Runtime.CompilerServices;
 using System.Numerics;
 using System.Linq;
 using System.Collections.Generic;
-using ui.utils;
-using ui.LatexExt;
 
-namespace ui.math
+namespace math_parser.math
 {
-    public struct Fraction : IComparable<Fraction>, ILatex
+    public struct Fraction : IComparable<Fraction>
     {
         public readonly BigInteger numerator, denominator;
 
@@ -70,7 +68,7 @@ namespace ui.math
             BigInteger denominator = 1;
             double remain = value % 1;
             int it = 0;
-            while (remain != 0 && it < Config.Frac_DoubleInterpretPrecision)
+            while (remain != 0 && it < 64)
             {
                 remain *= 2;
                 numerator <<= 1;

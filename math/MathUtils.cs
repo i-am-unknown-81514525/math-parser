@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace ui.math
+namespace math_parser.math
 {
     public static class MathUtils {
         // public static long factorize(long num1, long num2)

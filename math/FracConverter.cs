@@ -1,9 +1,7 @@
 using System;
 using System.Numerics;
-using ui;
-using ui.utils;
 
-namespace ui.math
+namespace math_parser.math
 {
     public class FractionFormatException : FormatException
     {
@@ -32,10 +30,6 @@ namespace ui.math
 
         public static Fraction ParseNumber(string number)
         {
-            if (DEBUG.FracConverter_AlternativeLowerScopeCheck && !RegexChecker.IsNumber(number) && (RegexChecker.IsDecimal(number) || RegexChecker.IsInteger(number)))
-            {
-                throw new NotSupportedException($"Regex Error: {number} is not being consider as number but have been consider as one of decimal or integer");
-            }
             if (!RegexChecker.IsNumber(number))
                 throw new FractionFormatException(number);
             if (RegexChecker.IsDecimal(number)) return ParseDecimal(number);
@@ -55,10 +49,6 @@ namespace ui.math
 
         public static Fraction Parse(string value)
         {
-            if (DEBUG.FracConverter_AlternativeLowerScopeCheck && !RegexChecker.IsNumber(value) && (RegexChecker.IsFraction(value) || RegexChecker.IsNumber(value)))
-            {
-                throw new NotSupportedException($"Regex Error: {value} is not being consider as parsable but have been consider as one of fraction or number");
-            }
             if (!RegexChecker.IsFracOrNum(value))
                 throw new FractionFormatException(value);
             if (RegexChecker.IsFraction(value)) return ParseFraction(value);
