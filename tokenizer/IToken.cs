@@ -15,9 +15,13 @@ namespace math_parser.tokenizer
     {
         (ParseResult curr, CharacterStream other) Parse(CharacterStream stream);
         bool CanParse(CharacterStream stream);
+        // This should not mutated the character stream in any way, only operate on clone of the character stream
 
         CharacterStream PartialParse(CharacterStream stream);
+        // Design: There are no guarentee of what character stream is returned from this function, or the action taken on the input stream
+
         bool CanPartialParse(CharacterStream stream);
+        // This should not mutated the character stream in any way, only operate on clone of the character stream
     }
 
     public abstract class Token : IToken

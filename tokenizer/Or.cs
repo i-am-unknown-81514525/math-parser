@@ -27,7 +27,15 @@ namespace math_parser.tokenizer
 
         public override bool CanPartialParse(CharacterStream stream)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                this.PartialParse(stream.Clone());
+                return true;
+            }
+            catch (TokenParseException)
+            {
+                return false;
+            }
         }
 
         public override (SyntaxDiscardResult, CharacterStream) Parse(CharacterStream stream)
@@ -45,12 +53,25 @@ namespace math_parser.tokenizer
 
                 }
             }
-            throw new TokenParseException("No valid path");
+            throw new TokenParseBacktrackException("No valid path"); // i.e. we have backtrack all possible options
         }
 
         public override CharacterStream PartialParse(CharacterStream stream)
         {
-            throw new System.NotImplementedException();
+            foreach (IBaseToken option in options)
+            {
+                CharacterStream inner = stream.Clone();
+                try
+                {
+                    option.PartialParse(inner);
+                    return inner;
+                }
+                catch (TokenParseException)
+                {
+
+                }
+            }
+            throw new TokenParseBacktrackException("No valid path");
         }
     }
 }
