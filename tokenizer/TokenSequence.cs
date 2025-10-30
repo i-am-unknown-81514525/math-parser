@@ -69,15 +69,15 @@ namespace math_parser.tokenizer
             return new TokenSequence<S>(tokens.ToArray());
         }
 
-        public override (GroupResult<S>, CharacterStream) Parse(CharacterStream stream)
+        public override GroupResult<S> Parse(CharacterStream stream)
         {
             MakeImmutable();
             List<S> r = new List<S>();
             foreach (IToken<S> token in immutable_tokens)
             {
-                r.Add(token.Parse(stream).Item1);
+                r.Add(token.Parse(stream));
             }
-            return (new GroupResult<S>(r), stream);
+            return new GroupResult<S>(r);
         }
 
         public override bool CanParse(CharacterStream stream)

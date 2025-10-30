@@ -6,9 +6,9 @@ namespace math_parser.tokenizer
     {
     }
 
-    public interface IToken<T> : IBaseToken where T : ParseResult
+    public interface IToken<out T> : IBaseToken where T : ParseResult
     {
-        new (T curr, CharacterStream other) Parse(CharacterStream stream);
+        new T Parse(CharacterStream stream);
     }
 
     public interface IBaseToken
@@ -28,10 +28,10 @@ namespace math_parser.tokenizer
     {
         (ParseResult, CharacterStream) IBaseToken.Parse(CharacterStream stream)
         {
-            return Parse(stream);
+            return (Parse(stream), stream);
         }
 
-        public abstract (SyntaxDiscardResult, CharacterStream) Parse(CharacterStream stream);
+        public abstract SyntaxDiscardResult Parse(CharacterStream stream);
         public abstract bool CanParse(CharacterStream stream);
         public abstract CharacterStream PartialParse(CharacterStream stream);
         public abstract bool CanPartialParse(CharacterStream stream);
@@ -40,10 +40,10 @@ namespace math_parser.tokenizer
     public abstract class Token<S> : IToken<S> where S : ParseResult {
         (ParseResult, CharacterStream) IBaseToken.Parse(CharacterStream stream)
         {
-            return Parse(stream);
+            return (Parse(stream), stream);
         }
 
-        public abstract (S, CharacterStream) Parse(CharacterStream stream);
+        public abstract S Parse(CharacterStream stream);
         public abstract bool CanParse(CharacterStream stream);
         public abstract CharacterStream PartialParse(CharacterStream stream);
         public abstract bool CanPartialParse(CharacterStream stream);

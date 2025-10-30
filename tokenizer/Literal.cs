@@ -21,8 +21,7 @@ namespace math_parser.tokenizer
 
         public virtual S Constructor(string content)
         {
-            S v = new SyntaxDiscardResult(content) as S;
-            if (v is null)
+            if (!(new SyntaxDiscardResult(content) is S v))
             {
                 throw new NullReferenceException("This is not SyntaxDiscardResult, you must override the constructor");
             }
@@ -41,12 +40,12 @@ namespace math_parser.tokenizer
             return stream.Peek() == content[0];
         }
 
-        public override (S, CharacterStream) Parse(CharacterStream stream)
+        public override S Parse(CharacterStream stream)
         {
-            if (content.Length == 0) return (Constructor(content), stream);
+            if (content.Length == 0) return Constructor(content);
             if (stream.Take(content.Length) == content)
             {
-                return (Constructor(content), stream);
+                return Constructor(content);
             }
             throw new TokenParseBacktrackException("Not valid path");
         }
