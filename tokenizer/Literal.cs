@@ -2,7 +2,14 @@ using System;
 
 namespace math_parser.tokenizer
 {
-    public class Literal : Token
+    public class Literal : Literal<SyntaxDiscardResult>
+    {
+        public Literal(string value) : base(value)
+        {
+        }
+    }
+
+    public class Literal<S> : Token<S> where S : ParseResult
     {
         private string content;
 
@@ -10,6 +17,16 @@ namespace math_parser.tokenizer
         {
             if (value is null) throw new NullReferenceException("Literal cannot be null");
             this.content = value;
+        }
+
+        public virtual S Constructor(string content)
+        {
+            S v = new SyntaxDiscardResult(content) as S;
+            if (v is null)
+            {
+                throw new NullReferenceException("This is not SyntaxDiscardResult, you must override the constructor");
+            }
+            return v;
         }
 
         public override bool CanParse(CharacterStream stream)
@@ -24,12 +41,12 @@ namespace math_parser.tokenizer
             return stream.Peek() == content[0];
         }
 
-        public override (SyntaxDiscardResult, CharacterStream) Parse(CharacterStream stream)
+        public override (S, CharacterStream) Parse(CharacterStream stream)
         {
-            if (content.Length == 0) return stream;
+            if (content.Length == 0) return (Constructor(content), stream);
             if (stream.Take(content.Length) == content)
             {
-                return stream;
+                return (Constructor(content), stream);
             }
             throw new TokenParseBacktrackException("Not valid path");
         }
