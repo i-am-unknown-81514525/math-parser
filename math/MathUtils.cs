@@ -21,8 +21,37 @@ namespace math_parser.math
         //         }
         //     }
         //     return factor;
-            
+
         // }
+
+        public static BigInteger Pow(BigInteger base_v, BigInteger expo)
+        {
+            BigInteger out_v = 1;
+            for (int i = 0; i < expo; i++)
+            {
+                out_v *= base_v;
+            }
+            return out_v;
+        }
+
+        public static Fraction Pow(Fraction base_v, BigInteger expo)
+        {
+            Fraction out_v = 1;
+            for (int i = 0; i < expo; i++)
+            {
+                out_v *= base_v;
+            }
+            return out_v;
+        }
+
+        public static BigInteger Abs(this BigInteger v)
+        {
+            if (v >= 0)
+            {
+                return v;
+            }
+            return -v;
+        }
 
         public static long factorize(long num1, long num2)
         {

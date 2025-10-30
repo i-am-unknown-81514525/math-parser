@@ -1,5 +1,5 @@
 using System;
-using System.Runtime.CompilerServices;
+using System.Text;
 using System.Numerics;
 using System.Linq;
 using System.Collections.Generic;
@@ -325,6 +325,189 @@ namespace math_parser.math
         public (BigInteger numerator, BigInteger denominator) asTuple() => (numerator, denominator);
 
         public string AsLatex() => denominator != 1 ? $"$\\frac{{{numerator}}}{{{denominator}}}$" : $"${numerator}$";
+
+        public Fraction Abs() => this >= 0 ? this : -this;
+
+        public (BigInteger integer, BigInteger length_0, BigInteger remaining) RepresentSigFig(BigInteger amount)
+        {
+            if (amount < 0)
+            {
+                throw new InvalidOperationException("Cannot have negative amount of significant figure");
+            }
+            bool have_initial = this.Abs() >= 1;
+            BigInteger integer = numerator / denominator;
+            if (this < 0)
+            {
+                integer--;
+            }
+            Fraction remaining = this - integer;
+            if (remaining < 0)
+            {
+                throw new InvalidOperationException("Fraction:RepresentSigFig idk how it give negative remaining");
+            }
+            if (amount < integer.Abs().ToString().Length || remaining == 0)
+            {
+                if (remaining.Abs() > new Fraction(1, 2))
+                {
+                    integer += remaining.numerator * 2 / remaining.denominator;
+                }
+                return (integer, 0, 0);
+            }
+            amount -= integer.Abs().ToString().Length - 2;
+            BigInteger length_0 = -1;
+            while (remaining < 1 && remaining != 0)
+            {
+                length_0++;
+                remaining *= 10;
+                if (have_initial)
+                {
+                    amount--;
+                }
+                if (amount < 0)
+                {
+                    return (integer, length_0, 0);
+                }
+            }
+            BigInteger left_over = 0;
+            while (amount >= 0)
+            {
+                left_over = left_over * 10;
+                if (remaining > 1)
+                {
+                    BigInteger curr = remaining.numerator / remaining.denominator;
+                    remaining -= curr;
+                    left_over += curr;
+                }
+                remaining *= 10;
+                amount--;
+            }
+            return (integer, length_0, left_over);
+        }
+
+        public (BigInteger integer, BigInteger length_0, BigInteger remaining) RepresentDp(BigInteger amount)
+        {
+            if (amount < 0)
+            {
+                throw new InvalidOperationException("Cannot have negative amount of significant figure");
+            }
+            BigInteger integer = numerator / denominator;
+            if (this < 0)
+            {
+                integer--;
+            }
+            Fraction remaining = this - integer;
+            if (remaining < 0)
+            {
+                throw new InvalidOperationException("Fraction:RepresentSigFig idk how it give negative remaining");
+            }
+            if (remaining == 0)
+            {
+                if (remaining.Abs() > new Fraction(1, 2))
+                {
+                    integer += remaining.numerator * 2 / remaining.denominator;
+                }
+                return (integer, 0, 0);
+            }
+            BigInteger length_0 = -1;
+            while (remaining < 1)
+            {
+                length_0++;
+                remaining *= 10;
+                amount--;
+                if (amount < 0)
+                {
+                    return (integer, length_0, 0);
+                }
+            }
+            BigInteger left_over = 0;
+            while (amount >= 0)
+            {
+                left_over = left_over * 10;
+                if (remaining > 1)
+                {
+                    BigInteger curr = remaining.numerator / remaining.denominator;
+                    remaining -= curr;
+                    left_over += curr;
+                }
+                remaining *= 10;
+                amount--;
+            }
+            return (integer, length_0, left_over);
+        }
+
+        public string ReprString(int length = 17)
+        {
+            if (length < 5)
+            {
+                throw new InvalidOperationException("Length must be at least 5");
+            }
+            StringBuilder builder = new StringBuilder(30);
+            (BigInteger integer, BigInteger length_0, BigInteger remaining) value = RepresentSigFig(length);
+            if (value.integer == 0 && value.remaining != 0)
+            {
+                string content = value.remaining.ToString();
+                builder.Append(content[0]);
+                if (content.Length > 1)
+                {
+                    builder.Append(".");
+                    builder.Append(content.Substring(1, content.Length - 1));
+                }
+                builder.Append("e");
+                builder.Append((-value.length_0 - 1).ToString());
+                return builder.ToString();
+            }
+            if (
+                (value.integer.Abs().ToString().Length + value.length_0 + value.remaining.ToString().Length +
+                (value.remaining == 0 ? -1 : 1)) < length
+            )
+            {
+                builder.Append(value.integer.ToString());
+                if (value.remaining > 0)
+                {
+                    builder.Append(".");
+                    builder.Append(new string('0', (int)value.length_0));
+                    builder.Append(value.remaining.ToString());
+                }
+                return builder.ToString();
+            }
+            else if (
+                (value.integer.Abs().ToString().Length + value.length_0 +
+                (value.remaining == 0 ? -1 : 1)) < length
+            )
+            {
+                builder.Append(value.integer.ToString());
+                if (value.remaining > 0)
+                {
+                    builder.Append(".");
+                    builder.Append(new string('0', (int)value.length_0));
+                    int left = length - (int)(value.integer.Abs().ToString().Length + value.length_0);
+                    builder.Append((value.remaining / MathUtils.Pow(10, value.remaining.ToString().Length - left)).ToString());
+                }
+                return builder.ToString();
+            }
+            else if (
+                value.integer.Abs().ToString().Length < length
+            )
+            {
+                return value.integer.Abs().ToString();
+            }
+            else
+            {
+                bool is_neg = value.integer < 0;
+                string content = value.integer.Abs().ToString();
+                BigInteger pow = value.integer.Abs().ToString().Length - 1;
+                builder.Append(is_neg ? "-" : "");
+                builder.Append(content[0]);
+                if (content.Length > 1)
+                {
+                    builder.Append(".");
+                    builder.Append(content.Substring(1, Math.Min(length, content.Length) - 1));
+                }
+                builder.Append("e");
+                builder.Append(pow.ToString());
+                return builder.ToString();
+            }
+        }
     }
 
     public static class FractionExtension
