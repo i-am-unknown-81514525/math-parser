@@ -82,6 +82,7 @@
     <Compile Include="tokenizer\*.cs" />
     <Compile Include="utils\*.cs" />
     <Compile Include="math\*.cs" />
+    <Compile Include="ast\*.cs" />
   </ItemGroup>
   <!-- <ItemGroup>
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
