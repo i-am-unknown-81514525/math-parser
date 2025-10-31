@@ -2,14 +2,14 @@ namespace math_parser.tokenizer
 {
     public class Group<S> : Token<S> where S : ParseResult
     {
-        private readonly IToken<S> inner_token;
+        protected readonly IToken<S> inner_token;
 
         public Group(IToken<S> inner)
         {
             inner_token = inner;
         }
 
-        public override (S, CharacterStream) Parse(CharacterStream stream) => inner_token.Parse(stream);
+        public override S Parse(CharacterStream stream) => inner_token.Parse(stream);
 
         public override bool CanParse(CharacterStream stream) => inner_token.CanParse(stream);
 
@@ -18,9 +18,9 @@ namespace math_parser.tokenizer
         public override bool CanPartialParse(CharacterStream stream) => inner_token.CanPartialParse(stream);
     }
 
-    public abstract class Group<S, T> : Token<S> where S : ParseResult where T : ParseResult
+    public abstract class Group<S, T> : Token<T> where S : ParseResult where T : ParseResult
     {
-        private readonly IToken<S> inner_token;
+        protected readonly IToken<S> inner_token;
 
         public Group(IToken<S> inner)
         {
