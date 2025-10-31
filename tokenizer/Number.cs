@@ -103,9 +103,7 @@ namespace math_parser.tokenizer
                                     Amount.Unbound
                                 ),
                                 new Repeat<ParseResult>(
-                                    new OrNoBacktrack<ParseResult>(
-                                        new Literal("0")
-                                    ),
+                                    new Literal("0"),
                                     0,
                                     Amount.Unbound
                                 )
