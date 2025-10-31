@@ -75,6 +75,22 @@ namespace math_parser.tokenizer
             }
             return curr;
         }
+
+        public static ExprResult operator /(ExprResult left, ExprResult right)
+        {
+            // This would ignore that (100x)/(50x) is possible to reduce complexity as out of scope
+            if (!right.isIntegerOnly())
+            {
+                throw new InvalidOperationException("Only divide by value is allowed");
+            }
+            Fraction total = right.terms.Select(x => x.coefficient).Sum();
+
+            if (total == 0)
+            {
+                throw new InvalidOperationException("Expression divided by 0");
+            }
+            return (1 / total) * left;
+        }
         
 
         public ExprResult Clone() => new ExprResult(terms.ToArray());
