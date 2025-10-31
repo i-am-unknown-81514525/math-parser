@@ -57,16 +57,16 @@ namespace math_parser.tokenizer
                                 new Maybe<MathAtomResult>(
                                     new OrNoBacktrack<MathAtomResult>(
                                         new VariableAtom(),
-                                        new LazyExpression()
+                                        new Bracketed<ExprResult>(new LazyExpression())
                                     )
                                 )
                             ),
-                        new TokenSequence<ParseResult>(
-                            new VariableAtom(),
-                            new Maybe<MathAtomResult>(
-                            new Bracketed<ExprResult>(new LazyExpression())
+                            new TokenSequence<ParseResult>(
+                                new VariableAtom(),
+                                new Maybe<MathAtomResult>(
+                                    new Bracketed<ExprResult>(new LazyExpression())
+                                )
                             )
-                        )
                         )
                     ),
                     0,
