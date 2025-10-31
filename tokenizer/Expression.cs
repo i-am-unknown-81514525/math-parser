@@ -98,6 +98,14 @@ namespace math_parser.tokenizer
 
     public class Expression : Group<ParseResult, ExprResult>
     {
+        public static readonly Dictionary<string, (int, int)> binding_power = new Dictionary<string, (int, int)>()
+        {
+            {"+", (1, 1) },
+            {"-", (1, 1) },
+            {"*", (2, 2) },
+            {"/", (2, 2) }
+        };
+
         public Expression() : base(
             new TokenSequence<ParseResult>(
                 new MathPotentialSpace(),
@@ -105,10 +113,12 @@ namespace math_parser.tokenizer
                     new Bracketed<ExprResult>(new LazyExpression()),
                     new TokenSequence<ParseResult>(
                         new Number(),
-                        new Maybe<MathAtomResult>(
-                           new OrNoBacktrack<MathAtomResult>(
+                        new Maybe<ParseResult>(
+                           new TokenSequence<ParseResult>(
                                 new VariableAtom(),
-                                new Bracketed<ExprResult>(new LazyExpression())
+                                new Maybe<MathAtomResult>(
+                                    new Bracketed<ExprResult>(new LazyExpression())
+                                )
                             )
                         )
                     ),
@@ -128,10 +138,12 @@ namespace math_parser.tokenizer
                             new Bracketed<ExprResult>(new LazyExpression()),
                             new TokenSequence<ParseResult>(
                                 new Number(),
-                                new Maybe<MathAtomResult>(
-                                    new OrNoBacktrack<MathAtomResult>(
+                                new Maybe<ParseResult>(
+                                new TokenSequence<ParseResult>(
                                         new VariableAtom(),
-                                        new Bracketed<ExprResult>(new LazyExpression())
+                                        new Maybe<MathAtomResult>(
+                                            new Bracketed<ExprResult>(new LazyExpression())
+                                        )
                                     )
                                 )
                             ),
