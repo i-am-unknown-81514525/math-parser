@@ -38,7 +38,7 @@ namespace math_parser.tokenizer
             }
         }
 
-        public override (S, CharacterStream) Parse(CharacterStream stream)
+        public override S Parse(CharacterStream stream)
         {
             foreach (IToken<S> option in options)
             {

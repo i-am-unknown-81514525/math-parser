@@ -2,7 +2,7 @@ using math_parser.math;
 
 namespace math_parser.tokenizer
 {
-    public struct FracResult : MathAtomResult
+    public class FracResult : MathAtomResult
     {
         public readonly NumberResult top;
         public readonly NumberResult bottom;
@@ -14,5 +14,18 @@ namespace math_parser.tokenizer
         }
 
         public Fraction AsFraction() => top.AsFraction() / bottom.AsFraction();
+    }
+
+    public class FracToken : Group<TokenSequenceResult<MathAtomResult>, FracResult>
+    {
+        public FracToken() : base(new TokenSequence<MathAtomResult>(new Number(), new MathLiteral("/"), new Number())) {}
+
+        public override FracResult Parse(CharacterStream stream)
+        {
+            MathAtomResult[] v = inner_token.Parse(stream).parseResult;
+            NumberResult top = (NumberResult)v[0];
+            NumberResult bottom = (NumberResult)v[2];
+            return new FracResult(top, bottom);
+        }
     }
 }

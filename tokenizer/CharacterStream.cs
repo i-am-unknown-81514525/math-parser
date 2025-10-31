@@ -93,7 +93,7 @@ namespace math_parser.tokenizer
 
         public CharacterStream JumpForwardTo(CharacterStream src)
         {
-            if (object.ReferenceEquals(src._base, this._base))
+            if (!object.ReferenceEquals(src._base, this._base))
             {
                 throw new InvalidOperationException("Not the same string");
             }

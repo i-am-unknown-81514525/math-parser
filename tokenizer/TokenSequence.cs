@@ -3,17 +3,17 @@ using System.Linq;
 
 namespace math_parser.tokenizer
 {
-    public class GroupResult<S> : ParseResult where S : ParseResult
+    public class TokenSequenceResult<S> : ParseResult where S : ParseResult
     {
         public S[] parseResult;
 
-        public GroupResult(IEnumerable<S> r)
+        public TokenSequenceResult(IEnumerable<S> r)
         {
             parseResult = r.ToArray();
         }
     }
 
-    public class TokenSequence<S> : Token<GroupResult<S>>, IEnumerable<IToken<S>> where S : ParseResult
+    public class TokenSequence<S> : Token<TokenSequenceResult<S>>, IEnumerable<IToken<S>> where S : ParseResult
     {
         private List<IToken<S>> tokens = new List<IToken<S>>();
         private bool _writable = true;
@@ -69,7 +69,7 @@ namespace math_parser.tokenizer
             return new TokenSequence<S>(tokens.ToArray());
         }
 
-        public override GroupResult<S> Parse(CharacterStream stream)
+        public override TokenSequenceResult<S> Parse(CharacterStream stream)
         {
             MakeImmutable();
             List<S> r = new List<S>();
@@ -77,14 +77,14 @@ namespace math_parser.tokenizer
             {
                 r.Add(token.Parse(stream));
             }
-            return new GroupResult<S>(r);
+            return new TokenSequenceResult<S>(r);
         }
 
         public override bool CanParse(CharacterStream stream)
         {
             MakeImmutable();
             CharacterStream clone = stream.Fork();
-            foreach (IToken token in immutable_tokens)
+            foreach (IToken<S> token in immutable_tokens)
             {
                 if (!token.CanParse(clone)) return false;
             }
@@ -95,7 +95,7 @@ namespace math_parser.tokenizer
         {
             MakeImmutable();
             CharacterStream ori = stream.Fork();
-            foreach (IToken token in immutable_tokens)
+            foreach (IToken<S> token in immutable_tokens)
             {
                 token.PartialParse(stream);
                 if (stream != ori)
@@ -110,7 +110,7 @@ namespace math_parser.tokenizer
             MakeImmutable();
             CharacterStream ori = stream.Fork();
             CharacterStream curr = stream.Fork();
-            foreach (IToken token in immutable_tokens)
+            foreach (IToken<S> token in immutable_tokens)
             {
                 token.PartialParse(curr);
                 if (curr != ori)

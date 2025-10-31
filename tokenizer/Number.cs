@@ -5,7 +5,7 @@ using math_parser.math;
 namespace math_parser.tokenizer
 {
 
-    public struct NumberResult : MathAtomResult
+    public class NumberResult : MathAtomResult
     {
         public readonly BigInteger integerPart;
         public readonly BigInteger decimalMantissa;

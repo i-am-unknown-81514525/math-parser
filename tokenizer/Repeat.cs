@@ -40,9 +40,9 @@ namespace math_parser.tokenizer
         public static implicit operator Amount(int v) => new Amount(v);
     }
 
-    public class ParseResultList<S> : List<S>, ParseResult where S : ParseResult {}
+    public class RepeatListResult<S> : List<S>, ParseResult where S : ParseResult {}
 
-    public class Repeat<S> : Token<ParseResultList<S>> where S : ParseResult
+    public class Repeat<S> : Token<RepeatListResult<S>> where S : ParseResult
     {
 
         IToken<S> token;
@@ -89,9 +89,9 @@ namespace math_parser.tokenizer
             return token.CanPartialParse(stream);
         }
 
-        public override ParseResultList<S> Parse(CharacterStream stream)
+        public override RepeatListResult<S> Parse(CharacterStream stream)
         {
-            ParseResultList<S> results = new ParseResultList<S>();
+            RepeatListResult<S> results = new RepeatListResult<S>();
             CharacterStream last = stream.Clone();
             CharacterStream curr = stream.Clone();
             for (uint i = 0; i < min.value; i++)

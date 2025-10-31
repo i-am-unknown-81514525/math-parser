@@ -1,6 +1,6 @@
 namespace math_parser.tokenizer
 {
-    public struct MathLiteralResult : ParseResult, MathAtomResult
+    public class MathLiteralResult : MathAtomResult
     {
         public readonly string literal;
 
