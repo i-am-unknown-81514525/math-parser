@@ -105,6 +105,19 @@ namespace math_parser.tokenizer
             return this;
         }
 
+        public string TakeTo(CharacterStream src)
+        {
+            if (!object.ReferenceEquals(src._base, this._base))
+            {
+                throw new InvalidOperationException("Not the same string");
+            }
+            if (this.ptr > src.ptr)
+            {
+                throw new InvalidOperationException("You cannot jump backward");
+            }
+            return Take(src.ptr-ptr);
+        }
+
         // public static implicit operator (SyntaxDiscardResult, CharacterStream)(CharacterStream stream) => (SyntaxDiscardResult.Empty, stream);
     }
 }
