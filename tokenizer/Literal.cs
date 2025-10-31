@@ -11,7 +11,7 @@ namespace math_parser.tokenizer
 
     public class Literal<S> : Token<S> where S : ParseResult
     {
-        private string content;
+        public readonly string content;
 
         public Literal(string value)
         {
