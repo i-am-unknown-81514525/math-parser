@@ -18,7 +18,13 @@ namespace math_parser.tokenizer
 
     public class FracToken : Group<TokenSequenceResult<MathAtomResult>, FracResult>
     {
-        public FracToken() : base(new TokenSequence<MathAtomResult>(new Number(), new MathLiteral("/"), new Number())) {}
+        public FracToken() : base(
+            new TokenSequence<MathAtomResult>(
+                new Number(),
+                new MathLiteral("/"),
+                new Number()
+            )
+        ) {}
 
         public override FracResult Parse(CharacterStream stream)
         {
