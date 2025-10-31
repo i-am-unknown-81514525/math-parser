@@ -1,3 +1,5 @@
+using System;
+
 namespace math_parser.tokenizer
 {
     public class SymbolAtom : Group<MathAtomResult>
@@ -13,5 +15,29 @@ namespace math_parser.tokenizer
                 new MathLiteral(">=")
             )
         ) {}
+    }
+
+    public class ArithmeticSymbolAtom : Group<MathAtomResult>
+    {
+        public ArithmeticSymbolAtom() : base(
+            new OrNoBacktrack<MathAtomResult>(
+                new MathLiteral("+"),
+                new MathLiteral("-"),
+                new MathLiteral("*"),
+                new MathLiteral("/")
+            )
+        )
+        { }
+    }
+    
+    public class ComparsionSymbolAtom : Group<MathAtomResult>
+    {
+        public ComparsionSymbolAtom() : base(
+            new OrNoBacktrack<MathAtomResult>(
+                new MathLiteral("<="),
+                new MathLiteral("="),
+                new MathLiteral(">=")
+            )
+        ) { }
     }
 }
