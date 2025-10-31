@@ -1,4 +1,7 @@
 using System;
+using System.CodeDom;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using math_parser.math;
 
@@ -20,6 +23,61 @@ namespace math_parser.tokenizer
     public class ExprResult : MathAtomResult
     {
         public readonly Term[] terms;
+
+        public ExprResult(Term[] terms)
+        {
+            this.terms = terms.ToArray();
+        }
+
+        public bool isIntegerOnly() => terms.Where(x => x.term_name != "").Count() == 0;
+
+        public static ExprResult operator +(ExprResult left, ExprResult right)
+        {
+            List<Term> ret = left.terms.ToList();
+            foreach (Term term in right.terms)
+            {
+                int idx = ret.Select(x => x.term_name).ToList().IndexOf(term.term_name);
+                if (idx == -1)
+                {
+                    ret.Add(term);
+                }
+                ret[idx] = new Term(ret[idx].coefficient + term.coefficient, term.term_name);
+            }
+            return new ExprResult(ret.ToArray());
+        }
+
+        public static ExprResult operator +(ExprResult curr) => curr.Clone();
+        public static ExprResult operator -(ExprResult curr) => -1 * curr;
+        public static ExprResult operator -(ExprResult left, ExprResult right) => left + (-right);
+
+        public static ExprResult operator *(Fraction scalar, ExprResult right) => new ExprResult(right.terms.Select(x => new Term(scalar*x.coefficient, x.term_name)).ToArray());
+
+        public static ExprResult operator *(ExprResult left, ExprResult right)
+        {
+            if (!(left.isIntegerOnly() || right.isIntegerOnly()))
+            {
+                throw new InvalidOperationException("This would cause multiplication between algebric term");
+            }
+            ExprResult curr = new ExprResult(new Term[] { });
+            if (left.isIntegerOnly())
+            {
+                foreach (Term tLeft in left.terms)
+                {
+                    curr += tLeft.coefficient * right;
+                }
+            }
+            else if (right.isIntegerOnly())
+            {
+                foreach (Term tRight in right.terms)
+                {
+                    curr += tRight.coefficient * left;
+                }
+            }
+            return curr;
+        }
+        
+
+        public ExprResult Clone() => new ExprResult(terms.ToArray());
     }
 
     public class Expression : Group<ParseResult, ExprResult>
