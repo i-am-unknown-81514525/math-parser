@@ -5,7 +5,7 @@ using math_parser.math;
 namespace math_parser.tokenizer
 {
 
-    public struct NumberResult : ParseResult
+    public struct NumberResult : MathAtomResult
     {
         public readonly BigInteger integerPart;
         public readonly BigInteger decimalMantissa;
@@ -157,8 +157,8 @@ namespace math_parser.tokenizer
                 {
                     throw new InvalidOperationException("Number pasing err1");
                 }
-                string left = content[0];
-                string right = content[1];
+                string left = all[0];
+                string right = all[1];
                 int r_length = right.Length;
                 BigInteger integerPart = BigInteger.Parse(left);
                 BigInteger mantissa = BigInteger.Parse(right.TrimStart('.'));
