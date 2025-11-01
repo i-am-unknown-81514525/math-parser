@@ -151,7 +151,7 @@ namespace math_parser.tokenizer
 
         public Expression() : base(
             new TokenSequence<ParseResult>(
-                new MathPotentialSpace(),
+                new PotentialSpace(),
                 new OrNoBacktrack<ParseResult>(
                     new Bracketed<ExprResult>(new LazyExpression()),
                     new TokenSequence<ParseResult>(
@@ -174,9 +174,9 @@ namespace math_parser.tokenizer
                 ),
                 new Repeat<ParseResult>(
                     new TokenSequence<ParseResult>(
-                        new MathPotentialSpace(),
+                        new PotentialSpace(),
                         new ArithmeticSymbolAtom(),
-                        new MathPotentialSpace(),
+                        new PotentialSpace(),
                         new OrNoBacktrack<ParseResult>(
                             new Bracketed<ExprResult>(new LazyExpression()),
                             new TokenSequence<ParseResult>(
@@ -201,69 +201,133 @@ namespace math_parser.tokenizer
                     0,
                     Amount.Unbound
                 ),
-                new MathPotentialSpace()
+                new PotentialSpace()
             )
         )
         { }
 
         public override ExprResult Parse(CharacterStream stream)
         {
-            List<Atom> TakeValues()
+            // List<Atom> TakeValues()
+            // {
+            //     List<Atom> inner = new List<Atom>();
+            //     int count = 0;
+            //     if ((new Number()).CanParse(stream))
+            //     {
+            //         inner.Add(
+            //             new Value(
+            //                 (ExprResult)(Term)(new Number()).Parse(stream).AsFraction()
+            //             )
+            //         );
+            //         count++;
+            //     }
+            //     if ((new VariableAtom().CanParse(stream)))
+            //     {
+            //         if (count > 0)
+            //         {
+            //             inner.Add(ArithematicSymbolAtom.Mul);
+            //         }
+
+            //         inner.Add(
+            //             new Value(
+            //                 (ExprResult)(Term)(1, (new VariableAtom()).Parse(stream).literal)
+            //             )
+            //         );
+            //         count++;
+            //     }
+            //     if (new Bracketed<ExprResult>(new Expression()).CanParse(stream))
+            //     {
+            //         if (count > 0)
+            //         {
+            //             inner.Add(ArithematicSymbolAtom.Mul);
+            //         }
+
+            //         inner.Add(new Value(new Bracketed<ExprResult>(new Expression()).Parse(stream)));
+            //         count++;
+            //     }
+            //     if (count == 0)
+            //     {
+            //         throw new TokenParseBacktrackException("no valid path");
+            //     }
+            //     return inner;
+            // }
+
+            List<MathAtomResult> Recur(ParseResult result)
             {
-                List<Atom> inner = new List<Atom>();
-                int count = 0;
-                if ((new Number()).CanParse(stream))
+                List<MathAtomResult> curr = new List<MathAtomResult>();
+                if (result is TokenSequenceResult<ParseResult> seqResult)
                 {
-                    inner.Add(
-                        new Value(
-                            (ExprResult)(Term)(new Number()).Parse(stream).AsFraction()
-                        )
-                    );
-                    count++;
-                }
-                if ((new VariableAtom().CanParse(stream)))
-                {
-                    if (count > 0)
+                    foreach (ParseResult r in seqResult.parseResult)
                     {
-                        inner.Add(ArithematicSymbolAtom.Mul);
+                        curr.AddRange(Recur(r));
                     }
-
-                    inner.Add(
-                        new Value(
-                            (ExprResult)(Term)(1, (new VariableAtom()).Parse(stream).literal)
-                        )
-                    );
-                    count++;
                 }
-                if (new Bracketed<ExprResult>(new Expression()).CanParse(stream))
+                else if (result is RepeatListResult<ParseResult> repeatResult)
                 {
-                    if (count > 0)
+                    foreach (ParseResult r in repeatResult)
                     {
-                        inner.Add(ArithematicSymbolAtom.Mul);
+                        curr.AddRange(Recur(r));
                     }
-
-                    inner.Add(new Value(new Bracketed<ExprResult>(new Expression()).Parse(stream)));
-                    count++;
                 }
-                if (count == 0)
+                else if (result is MathAtomResult atom)
                 {
-                    throw new TokenParseBacktrackException("no valid path");
+                    curr.Add((MathAtomResult)atom);
                 }
-                return inner;
+                return curr;
             }
+
             Dictionary<string, ArithematicSymbolAtom> matcher = new Dictionary<string, ArithematicSymbolAtom>()
             {
                 {"+", ArithematicSymbolAtom.Add},
                 {"-", ArithematicSymbolAtom.Sub},
                 {"*", ArithematicSymbolAtom.Mul},
                 {"/", ArithematicSymbolAtom.Div}
-            }
+            };
 
             List<Atom> atoms = new List<Atom>();
 
-            atoms.AddRange(TakeValues());
-            
+            List<MathAtomResult> linear_parse = Recur(inner_token.Parse(stream));
 
+            bool last_is_value = false;
+            foreach (MathAtomResult result in linear_parse)
+            {
+                if (result is NumberResult num)
+                {
+                    if (last_is_value)
+                    {
+                        atoms.Add(ArithematicSymbolAtom.Mul);
+                    }
+                    last_is_value = true;
+                    atoms.Add(new Value((Term)num.AsFraction()));
+                }
+                else if (result is MathLiteralResult literal)
+                {
+                    if (matcher.ContainsKey(literal.literal))
+                    {
+                        last_is_value = false;
+                        atoms.Add(matcher[literal.literal]);
+                    }
+                    else
+                    {
+                        if (last_is_value)
+                        {
+                            atoms.Add(ArithematicSymbolAtom.Mul);
+                        }
+                        last_is_value = true;
+                        atoms.Add(new Value((Term)(1, literal.literal)));
+                    }
+                }
+                else if (result is ExprResult expr)
+                {
+                    if (last_is_value)
+                    {
+                        atoms.Add(ArithematicSymbolAtom.Mul);
+                    }
+                    last_is_value = true;
+                    atoms.Add(new Value(expr));
+                }
+            }
+            
         }
     }
 
