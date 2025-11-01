@@ -179,7 +179,7 @@ namespace math_parser.tokenizer
                 new Repeat<ParseResult>(
                     new TokenSequence<ParseResult>(
                         new PotentialSpace(),
-                        new ArithmeticSymbolAtom(),
+                        new math_parser.tokenizer.ArithmeticSymbolAtom(),
                         new PotentialSpace(),
                         new OrNoBacktrack<ParseResult>(
                             new Bracketed<ExprResult>(new LazyExpression()),
