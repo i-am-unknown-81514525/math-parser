@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using math_parser.ast;
 using math_parser.math;
 
 namespace math_parser.tokenizer
@@ -20,7 +21,7 @@ namespace math_parser.tokenizer
 
     }
 
-    public class ExprResult : MathAtomResult
+    public class ExprResult : MathAtomResult, IAdd<ExprResult, ExprResult>, ISub<ExprResult, ExprResult>, ISelfAdd<ExprResult>, ISelfSub<ExprResult>, IMul<ExprResult, ExprResult>, IDiv<ExprResult, ExprResult>
     {
         public readonly Term[] terms;
 
@@ -94,6 +95,36 @@ namespace math_parser.tokenizer
         
 
         public ExprResult Clone() => new ExprResult(terms.ToArray());
+
+        public ExprResult Add(ExprResult right)
+        {
+            return this + right;
+        }
+
+        public ExprResult Sub(ExprResult right)
+        {
+            return this - right;
+        }
+
+        public ExprResult Add()
+        {
+            return this;
+        }
+
+        public ExprResult Sub()
+        {
+            return -this;
+        }
+
+        public ExprResult Mul(ExprResult right)
+        {
+            return this * right;
+        }
+
+        public ExprResult Div(ExprResult right)
+        {
+            return this / right;
+        }
     }
 
     public class Expression : Group<ParseResult, ExprResult>
