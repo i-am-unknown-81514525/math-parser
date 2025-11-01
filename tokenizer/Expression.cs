@@ -51,7 +51,7 @@ namespace math_parser.tokenizer
         public static ExprResult operator -(ExprResult curr) => -1 * curr;
         public static ExprResult operator -(ExprResult left, ExprResult right) => left + (-right);
 
-        public static ExprResult operator *(Fraction scalar, ExprResult right) => new ExprResult(right.terms.Select(x => new Term(scalar*x.coefficient, x.term_name)).ToArray());
+        public static ExprResult operator *(Fraction scalar, ExprResult right) => new ExprResult(right.terms.Select(x => new Term(scalar * x.coefficient, x.term_name)).ToArray());
 
         public static ExprResult operator *(ExprResult left, ExprResult right)
         {
@@ -92,7 +92,7 @@ namespace math_parser.tokenizer
             }
             return (1 / total) * left;
         }
-        
+
 
         public ExprResult Clone() => new ExprResult(terms.ToArray());
 
@@ -125,6 +125,13 @@ namespace math_parser.tokenizer
         {
             return this / right;
         }
+    }
+
+    public class ASTExprResult : ASTValue1<ExprResult>
+    {
+        public ASTExprResult(ExprResult result) : base(result) {}
+
+        public override ExprResult Calc() => value;
     }
 
     public class Expression : Group<ParseResult, ExprResult>
