@@ -16,8 +16,8 @@ namespace math_parser.ast
 
     public abstract class ASTOpNode2<T, O> : IASTNode<O>
     {
-        protected readonly IASTNode<T> left;
-        protected readonly IASTNode<T> right;
+        public readonly IASTNode<T> left;
+        public readonly IASTNode<T> right;
 
         public ASTOpNode2(IASTNode<T> left, IASTNode<T> right)
         {
