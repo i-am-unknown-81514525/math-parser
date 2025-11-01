@@ -54,7 +54,7 @@ namespace math_parser.ast
         public ASTMul(IASTNode<I> left, IASTNode<I> right) : base(left, right) { }
 
         public override O Calc() => left.Calc().Mul(right.Calc());
-    } 
+    }
 
     public class ASTMul<T> : ASTOpNode2<T> where T : IMul<T, T>
     {
@@ -62,4 +62,25 @@ namespace math_parser.ast
 
         public override T Calc() => left.Calc().Mul(right.Calc());
     } 
+
+    public class ASTDiv<L, R, O> : ASTOpNode2<L, R, O> where L : IDiv<R, O>
+    {
+        public ASTDiv(IASTNode<L> left, IASTNode<R> right) : base(left, right) { }
+
+        public override O Calc() => left.Calc().Div(right.Calc());
+    }
+
+    public class ASTDiv<I, O> : ASTOpNode2<I, O> where I : IDiv<I, O>
+    {
+        public ASTDiv(IASTNode<I> left, IASTNode<I> right) : base(left, right) { }
+
+        public override O Calc() => left.Calc().Div(right.Calc());
+    } 
+
+    public class ASTDiv<T> : ASTOpNode2<T> where T : IDiv<T, T>
+    {
+        public ASTDiv(IASTNode<T> left, IASTNode<T> right) : base(left, right) { }
+
+        public override T Calc() => left.Calc().Div(right.Calc());
+    }
 }
