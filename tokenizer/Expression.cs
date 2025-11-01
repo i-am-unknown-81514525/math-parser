@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using math_parser.ast;
 using math_parser.math;
+using math_parser.atom;
 
 namespace math_parser.tokenizer
 {
@@ -19,6 +20,8 @@ namespace math_parser.tokenizer
             this.term_name = term_name;
         }
 
+        public static implicit operator Term(Fraction v) => new Term(v, "");
+        public static implicit operator Term((Fraction frac, string term) v) => new Term(v.frac, v.term);
     }
 
     public class ExprResult : MathAtomResult, IAdd<ExprResult, ExprResult>, ISub<ExprResult, ExprResult>, ISelfAdd<ExprResult>, ISelfSub<ExprResult>, IMul<ExprResult, ExprResult>, IDiv<ExprResult, ExprResult>
@@ -125,6 +128,8 @@ namespace math_parser.tokenizer
         {
             return this / right;
         }
+
+        public static implicit operator ExprResult(Term v) => new ExprResult(new[] { v });
     }
 
     public class ASTExprResult : ASTValue1<ExprResult>
@@ -136,12 +141,12 @@ namespace math_parser.tokenizer
 
     public class Expression : Group<ParseResult, ExprResult>
     {
-        public static readonly Dictionary<string, (int, int)> binding_power = new Dictionary<string, (int, int)>()
+        public static readonly Dictionary<ArithematicSymbolAtom, (int, int)> binding_power = new Dictionary<ArithematicSymbolAtom, (int, int)>()
         {
-            {"+", (1, 2) },
-            {"-", (1, 2) },
-            {"*", (3, 4) },
-            {"/", (3, 4) }
+            {ArithematicSymbolAtom.Add, (1, 2) },
+            {ArithematicSymbolAtom.Sub, (1, 2) },
+            {ArithematicSymbolAtom.Mul, (3, 4) },
+            {ArithematicSymbolAtom.Div, (3, 4) }
         };
 
         public Expression() : base(
@@ -203,7 +208,62 @@ namespace math_parser.tokenizer
 
         public override ExprResult Parse(CharacterStream stream)
         {
-            throw new NotImplementedException();
+            List<Atom> TakeValues()
+            {
+                List<Atom> inner = new List<Atom>();
+                int count = 0;
+                if ((new Number()).CanParse(stream))
+                {
+                    inner.Add(
+                        new Value(
+                            (ExprResult)(Term)(new Number()).Parse(stream).AsFraction()
+                        )
+                    );
+                    count++;
+                }
+                if ((new VariableAtom().CanParse(stream)))
+                {
+                    if (count > 0)
+                    {
+                        inner.Add(ArithematicSymbolAtom.Mul);
+                    }
+
+                    inner.Add(
+                        new Value(
+                            (ExprResult)(Term)(1, (new VariableAtom()).Parse(stream).literal)
+                        )
+                    );
+                    count++;
+                }
+                if (new Bracketed<ExprResult>(new Expression()).CanParse(stream))
+                {
+                    if (count > 0)
+                    {
+                        inner.Add(ArithematicSymbolAtom.Mul);
+                    }
+
+                    inner.Add(new Value(new Bracketed<ExprResult>(new Expression()).Parse(stream)));
+                    count++;
+                }
+                if (count == 0)
+                {
+                    throw new TokenParseBacktrackException("no valid path");
+                }
+                return inner;
+            }
+            Dictionary<string, ArithematicSymbolAtom> matcher = new Dictionary<string, ArithematicSymbolAtom>()
+            {
+                {"+", ArithematicSymbolAtom.Add},
+                {"-", ArithematicSymbolAtom.Sub},
+                {"*", ArithematicSymbolAtom.Mul},
+                {"/", ArithematicSymbolAtom.Div}
+            }
+
+            List<Atom> atoms = new List<Atom>();
+
+            atoms.AddRange(TakeValues());
+            
+
         }
     }
 
