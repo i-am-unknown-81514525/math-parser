@@ -182,11 +182,14 @@ namespace math_parser.tokenizer
                     ),
                     new TokenSequence<ParseResult>(
                         new Number(),
-                        new Maybe<ParseResult>(
-                           new TokenSequence<ParseResult>(
-                                new VariableAtom(),
-                                new Maybe<ParseResult>(
-                                    new Bracketed<ExprResult>(new LazyExpression())
+                        new OrNoBacktrack<ParseResult>(
+                            new Bracketed<ExprResult>(new LazyExpression()),
+                            new Maybe<ParseResult>(
+                                new TokenSequence<ParseResult>(
+                                    new VariableAtom(),
+                                    new Maybe<ParseResult>(
+                                        new Bracketed<ExprResult>(new LazyExpression())
+                                    )
                                 )
                             )
                         )
@@ -212,10 +215,15 @@ namespace math_parser.tokenizer
                             new TokenSequence<ParseResult>(
                                 new Number(),
                                 new Maybe<ParseResult>(
-                                new TokenSequence<ParseResult>(
-                                        new VariableAtom(),
+                                    new OrNoBacktrack<ParseResult>(
+                                        new Bracketed<ExprResult>(new LazyExpression()),
                                         new Maybe<ParseResult>(
-                                            new Bracketed<ExprResult>(new LazyExpression())
+                                            new TokenSequence<ParseResult>(
+                                                new VariableAtom(),
+                                                new Maybe<ParseResult>(
+                                                    new Bracketed<ExprResult>(new LazyExpression())
+                                                )
+                                            )
                                         )
                                     )
                                 )
