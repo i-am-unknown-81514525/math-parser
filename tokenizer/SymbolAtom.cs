@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 
 namespace math_parser.tokenizer
 {
@@ -29,7 +30,7 @@ namespace math_parser.tokenizer
         )
         { }
     }
-    
+
     public class ComparsionSymbolAtom : Group<MathAtomResult>
     {
         public ComparsionSymbolAtom() : base(
@@ -38,6 +39,20 @@ namespace math_parser.tokenizer
                 new MathLiteral("="),
                 new MathLiteral(">=")
             )
-        ) { }
+        )
+        { }
+    }
+    
+    public class FullComparsionSymbolAtom : Group<MathAtomResult>
+    {
+        public FullComparsionSymbolAtom() : base(
+            new Or<MathAtomResult>(
+                new MathLiteral("="),
+                new MathLiteral("<="),
+                new MathLiteral(">="),
+                new MathLiteral("<"),
+                new MathLiteral(">")
+            )
+        ) {}
     }
 }
