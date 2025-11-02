@@ -27,9 +27,9 @@ namespace math_parser.tokenizer
             new TokenSequence<ParseResult>(
                 new PotentialSpace(),
                 new Or<ParseResult>(
+                    new Literal("\r\n"),
                     new Literal("\n"),
-                    new Literal("\r"),
-                    new Literal("\r\n")
+                    new Literal("\r")
                 ),
                 new PotentialSpace()
             )
