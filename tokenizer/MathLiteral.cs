@@ -10,7 +10,7 @@ namespace math_parser.tokenizer
         }
 
         public override string ToString() => ToString(0);
-        public string ToString(int indent) => $"{ParseResultExtensions.Indent(indent)}MathLiteralResult: '{literal}'\n";
+        public virtual string ToString(int indent) => $"{ParseResultExtensions.Indent(indent)}MathLiteralResult: '{literal}'\n";
     }
     public class MathLiteral : Literal<MathLiteralResult>
     {

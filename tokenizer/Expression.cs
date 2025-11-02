@@ -177,7 +177,7 @@ namespace math_parser.tokenizer
                 new PotentialSpace(),
                 new Or<ParseResult>(
                     new TokenSequence<ParseResult>(
-                        new Maybe<OppoSignResult>(new OppoSign()),
+                        new Maybe<ParseResult>(new OppoSign()),
                         new Bracketed<ExprResult>(new LazyExpression())
                     ),
                     new TokenSequence<ParseResult>(
@@ -185,16 +185,16 @@ namespace math_parser.tokenizer
                         new Maybe<ParseResult>(
                            new TokenSequence<ParseResult>(
                                 new VariableAtom(),
-                                new Maybe<MathAtomResult>(
+                                new Maybe<ParseResult>(
                                     new Bracketed<ExprResult>(new LazyExpression())
                                 )
                             )
                         )
                     ),
                     new TokenSequence<ParseResult>(
-                        new Maybe<OppoSignResult>(new OppoSign()),
+                        new Maybe<ParseResult>(new OppoSign()),
                         new VariableAtom(),
-                        new Maybe<MathAtomResult>(
+                        new Maybe<ParseResult>(
                            new Bracketed<ExprResult>(new LazyExpression())
                         )
                     )
@@ -206,7 +206,7 @@ namespace math_parser.tokenizer
                         new PotentialSpace(),
                         new Or<ParseResult>(
                             new TokenSequence<ParseResult>(
-                                new Maybe<OppoSignResult>(new OppoSign()),
+                                new Maybe<ParseResult>(new OppoSign()),
                                 new Bracketed<ExprResult>(new LazyExpression())
                             ),
                             new TokenSequence<ParseResult>(
@@ -214,16 +214,16 @@ namespace math_parser.tokenizer
                                 new Maybe<ParseResult>(
                                 new TokenSequence<ParseResult>(
                                         new VariableAtom(),
-                                        new Maybe<MathAtomResult>(
+                                        new Maybe<ParseResult>(
                                             new Bracketed<ExprResult>(new LazyExpression())
                                         )
                                     )
                                 )
                             ),
                             new TokenSequence<ParseResult>(
-                                new Maybe<OppoSignResult>(new OppoSign()),
+                                new Maybe<ParseResult>(new OppoSign()),
                                 new VariableAtom(), 
-                                new Maybe<MathAtomResult>(
+                                new Maybe<ParseResult>(
                                     new Bracketed<ExprResult>(new LazyExpression())
                                 )
                             )
