@@ -5,7 +5,7 @@ namespace math_parser.tokenizer
 {
     public struct Amount
     {
-        public uint amount { get; }
+        private uint amount { get; }
 
         public Amount(int amount)
         {
@@ -18,7 +18,7 @@ namespace math_parser.tokenizer
 
         public bool isUnbound
         {
-            get => amount < 0;
+            get => amount == 0;
             set { }
         }
 
@@ -56,7 +56,7 @@ namespace math_parser.tokenizer
             {
                 min = new Amount(0);
             }
-            if (!max.isUnbound && min.amount > max.amount)
+            if (!max.isUnbound && min.value > max.value)
             {
                 throw new ArgumentOutOfRangeException("min must be less than or equal to max");
             }
@@ -66,7 +66,7 @@ namespace math_parser.tokenizer
 
         public override bool CanParse(CharacterStream stream)
         {
-            if (min.amount == 0)
+            if (min.value == 0)
             {
                 return true;
             }
@@ -82,7 +82,7 @@ namespace math_parser.tokenizer
 
         public override bool CanPartialParse(CharacterStream stream)
         {
-            if (min.amount == 0)
+            if (min.value == 0)
             {
                 return true;
             }
@@ -142,7 +142,7 @@ namespace math_parser.tokenizer
 
         public override CharacterStream PartialParse(CharacterStream stream)
         {
-            if (min.amount == 0)
+            if (min.value == 0)
             {
                 return stream;
             }
