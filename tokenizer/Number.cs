@@ -134,9 +134,9 @@ namespace math_parser.tokenizer
 
         public override NumberResult Parse(CharacterStream stream)
         {
-            CharacterStream cp = stream.Clone();
-            inner_token.Parse(cp);
-            string content = stream.Take(cp.ptr - stream.ptr);
+            CharacterStream before = stream.Clone();
+            inner_token.Parse(stream);
+            string content = before.TakeTo(stream);
             if (content.Contains("."))
             {
                 string[] all = content.Split('.');

@@ -34,8 +34,9 @@ namespace math_parser.tokenizer
                     CharacterStream inner = stream.Fork();
                     try
                     {
-                        S v = token.Parse(inner);
-                        return token.Parse(stream);
+                        S result = token.Parse(inner);
+                        stream.JumpForwardTo(inner);
+                        return result;
                     }
                     catch (TokenParseException)
                     {

@@ -38,7 +38,7 @@ namespace test{
             {
                 Console.WriteLine("Warning: Not End of line");
             }
-            ExprResult objective = (ExprResult)result.parseResult[1];
+            ExprResult objective = (ExprResult)result.parseResult[2];
 
             RepeatListResult<TokenSequenceResult<ParseResult>> eqs_token = (RepeatListResult<TokenSequenceResult<ParseResult>>)result.parseResult[6];
 
@@ -53,9 +53,9 @@ namespace test{
             foreach (Term term in objective.terms)
             {
                 string sign = term.coefficient >= 0 ? "+" : "";
-                Console.Write($"{sign}{term.coefficient}{term.term_name} ");
+                Console.Write($"{sign}{term.coefficient}{term.term_name}");
             }
-            Console.Write("Constraint: ");
+            Console.Write("\nConstraint: ");
             foreach (EqResult eq in eqs)
             {
                 foreach (Term term in eq.exprs.terms)
@@ -63,7 +63,7 @@ namespace test{
                     string sign = term.coefficient >= 0 ? "+" : "";
                     Console.Write($"{sign}{term.coefficient}{term.term_name} ");
                 }
-                Console.Write($"{eq.comparsionAtom.literal} 0");
+                Console.WriteLine($"{eq.comparsionAtom.literal} 0");
             }
         }
     }

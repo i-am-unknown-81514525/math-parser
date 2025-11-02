@@ -46,7 +46,8 @@ namespace math_parser.tokenizer
                 try
                 {
                     S v = option.Parse(inner);
-                    return option.Parse(stream);
+                    stream.JumpForwardTo(inner);
+                    return v;
                 }
                 catch (TokenParseException)
                 {

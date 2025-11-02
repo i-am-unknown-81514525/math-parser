@@ -45,9 +45,9 @@ namespace math_parser.utils
             {
                 return "";
             }
-            if (startIndex + length + 1 >= content.Length)
+            if (startIndex + length >= content.Length)
             {
-                length = content.Length - startIndex - 1;
+                length = content.Length - startIndex;
             }
             return this.content.Substring(startIndex, length);
         }

@@ -126,7 +126,7 @@ namespace math_parser.tokenizer
         
         public bool IsEof
         {
-            get => ptr + 1 == _base.Length;
+            get => ptr + 1 >= _base.Length;
         }
 
         // public static implicit operator (SyntaxDiscardResult, CharacterStream)(CharacterStream stream) => (SyntaxDiscardResult.Empty, stream);

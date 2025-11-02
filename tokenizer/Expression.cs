@@ -334,16 +334,16 @@ namespace math_parser.tokenizer
                     atoms.Add(new Value(expr));
                 }
             }
-            foreach (Atom atom in atoms)
-            {
-                Console.Write(atom);
-                if (atom is Value v)
-                {
-                    Console.Write($"({v.inner.terms[0].coefficient}, {v.inner.terms[0].term_name})");
-                }
-                Console.Write(" ");
-            }
-            Console.Write("\n");
+            // foreach (Atom atom in atoms)
+            // {
+            //     Console.Write(atom);
+            //     if (atom is Value v)
+            //     {
+            //         Console.Write($"({v.inner.terms[0].coefficient}, {v.inner.terms[0].term_name})");
+            //     }
+            //     Console.Write(" ");
+            // }
+            // Console.Write("\n");
             return ParseExpr(new Queue<Atom>(atoms), 0).Calc();
         }
         // Core Dumped, ‘This Simple Algorithm Powers Real Interpreters: Pratt Parsing’, YouTube. Accessed: May 23, 2025. [Online]. Available: https://youtu.be/0c8b7YfsBKJs
