@@ -20,7 +20,7 @@ Custom language:
 ```
 MAX 1 + 2x + 2y + 5 + 2 * -4x + 2 * -(5 + 3x)
 ST 
-    5 + x <= 12
+    5 + x <= 12 + 5(7+x) + 2 * -x(5 + 4 / 2)
     22 + y <= 164
     254 - 72y +16x <= 5x + 74
 END
@@ -29,7 +29,7 @@ END
 ```
 ...(Not the entire output shown, only the important bit)
 Objective: -4-12x+2y
-Constraint: -7 +1x <= 0
+Constraint: -42 +10x <= 0
 -142 +1y <= 0
 +180 -72y +11x <= 0
 ```
