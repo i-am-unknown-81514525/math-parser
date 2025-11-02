@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using math_parser.ast;
+using System.Text;
 using math_parser.math;
 using math_parser.atom;
 
@@ -133,6 +134,20 @@ namespace math_parser.tokenizer
         }
 
         public static implicit operator ExprResult(Term v) => new ExprResult(new[] { v });
+
+        public override string ToString() => ToString(0);
+        public string ToString(int indent)
+        {
+            var sb = new StringBuilder();
+            sb.Append($"{ParseResultExtensions.Indent(indent)}ExprResult: ");
+            for (int i = 0; i < terms.Length; i++)
+            {
+                sb.Append($"({terms[i].coefficient}, '{terms[i].term_name}')");
+                if (i < terms.Length - 1) sb.Append(" + ");
+            }
+            sb.AppendLine();
+            return sb.ToString();
+        }
     }
 
     public class ASTExprResult : ASTValue1<ExprResult>
@@ -153,14 +168,18 @@ namespace math_parser.tokenizer
             {ArithematicSymbolAtom.Add, (1, 2) },
             {ArithematicSymbolAtom.Sub, (1, 2) },
             {ArithematicSymbolAtom.Mul, (3, 4) },
-            {ArithematicSymbolAtom.Div, (3, 4) }
+            {ArithematicSymbolAtom.Div, (3, 4) },
+            { ArithematicSymbolAtom.StongMul, (5, 6)}
         };
 
         public Expression() : base( // 1 + (2x * 3) / 2 => [(5/2, ""), (1, "x")]
             new TokenSequence<ParseResult>(
                 new PotentialSpace(),
-                new OrNoBacktrack<ParseResult>(
-                    new Bracketed<ExprResult>(new LazyExpression()),
+                new Or<ParseResult>(
+                    new TokenSequence<ParseResult>(
+                        new Maybe<OppoSignResult>(new OppoSign()),
+                        new Bracketed<ExprResult>(new LazyExpression())
+                    ),
                     new TokenSequence<ParseResult>(
                         new Number(),
                         new Maybe<ParseResult>(
@@ -173,6 +192,7 @@ namespace math_parser.tokenizer
                         )
                     ),
                     new TokenSequence<ParseResult>(
+                        new Maybe<OppoSignResult>(new OppoSign()),
                         new VariableAtom(),
                         new Maybe<MathAtomResult>(
                            new Bracketed<ExprResult>(new LazyExpression())
@@ -184,8 +204,11 @@ namespace math_parser.tokenizer
                         new PotentialSpace(),
                         new math_parser.tokenizer.ArithmeticSymbolAtom(),
                         new PotentialSpace(),
-                        new OrNoBacktrack<ParseResult>(
-                            new Bracketed<ExprResult>(new LazyExpression()),
+                        new Or<ParseResult>(
+                            new TokenSequence<ParseResult>(
+                                new Maybe<OppoSignResult>(new OppoSign()),
+                                new Bracketed<ExprResult>(new LazyExpression())
+                            ),
                             new TokenSequence<ParseResult>(
                                 new Number(),
                                 new Maybe<ParseResult>(
@@ -198,9 +221,10 @@ namespace math_parser.tokenizer
                                 )
                             ),
                             new TokenSequence<ParseResult>(
+                                new Maybe<OppoSignResult>(new OppoSign()),
                                 new VariableAtom(),
                                 new Maybe<MathAtomResult>(
-                                    new Bracketed<ExprResult>(new LazyExpression())
+                                new Bracketed<ExprResult>(new LazyExpression())
                                 )
                             )
                         )
@@ -293,12 +317,22 @@ namespace math_parser.tokenizer
 
             List<Atom> atoms = new List<Atom>();
 
-            List<MathAtomResult> linear_parse = Recur(inner_token.Parse(stream));
+            var parseTree = inner_token.Parse(stream);
+            Console.WriteLine("--- Parse Tree ---");
+            Console.WriteLine(parseTree.Print());
+            Console.WriteLine("------------------");
+            List<MathAtomResult> linear_parse = Recur(parseTree);
 
             bool last_is_value = false;
             foreach (MathAtomResult result in linear_parse)
             {
-                if (result is NumberResult num)
+                if (result is OppoSignResult)
+                {
+                    atoms.Add(new Value((ExprResult)(Term)(Fraction)(-1)));
+                    atoms.Add(ArithematicSymbolAtom.StongMul);
+                    last_is_value = false;
+                }
+                else if (result is NumberResult num)
                 {
                     if (last_is_value)
                     {
@@ -334,16 +368,29 @@ namespace math_parser.tokenizer
                     atoms.Add(new Value(expr));
                 }
             }
-            // foreach (Atom atom in atoms)
-            // {
-            //     Console.Write(atom);
-            //     if (atom is Value v)
-            //     {
-            //         Console.Write($"({v.inner.terms[0].coefficient}, {v.inner.terms[0].term_name})");
-            //     }
-            //     Console.Write(" ");
-            // }
-            // Console.Write("\n");
+            foreach (Atom atom in atoms)
+            {
+                Console.Write(atom.GetType().Name);
+                if (atom is Value v)
+                {
+                    Console.Write("(");
+                    for (int i = 0; i < v.inner.terms.Length; i++)
+                    {
+                        var term = v.inner.terms[i];
+                        Console.Write($"({term.coefficient}, '{term.term_name}')");
+                        if (i < v.inner.terms.Length - 1)
+                        {
+                            Console.Write(", ");
+                        }
+                    }
+                    Console.Write(")");
+                } else if (atom is ArithematicSymbolAtom op)
+                {
+                    Console.Write($"({op.literal})");
+                }
+                Console.Write(" ");
+            }
+            Console.Write("\n");
             return ParseExpr(new Queue<Atom>(atoms), 0).Calc();
         }
         // Core Dumped, ‘This Simple Algorithm Powers Real Interpreters: Pratt Parsing’, YouTube. Accessed: May 23, 2025. [Online]. Available: https://youtu.be/0c8b7YfsBKJs
@@ -380,7 +427,8 @@ namespace math_parser.tokenizer
                     { ArithematicSymbolAtom.Add, new ASTAdd<ExprResult>(lhs, rhs)},
                     { ArithematicSymbolAtom.Sub, new ASTSub<ExprResult>(lhs, rhs)},
                     { ArithematicSymbolAtom.Mul, new ASTMul<ExprResult>(lhs, rhs)},
-                    { ArithematicSymbolAtom.Div, new ASTDiv<ExprResult>(lhs, rhs)}
+                    { ArithematicSymbolAtom.Div, new ASTDiv<ExprResult>(lhs, rhs)},
+                    { ArithematicSymbolAtom.StongMul, new ASTMul<ExprResult>(lhs, rhs)}
                 }[op_raw];
             } while (true);
             return lhs;

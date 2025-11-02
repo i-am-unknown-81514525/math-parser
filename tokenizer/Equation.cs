@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using math_parser;
 
 namespace math_parser.tokenizer
@@ -12,6 +13,17 @@ namespace math_parser.tokenizer
         {
             this.exprs = result;
             this.comparsionAtom = atom;
+        }
+
+        public override string ToString() => ToString(0);
+        public string ToString(int indent)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"{ParseResultExtensions.Indent(indent)}EqResult:");
+            sb.AppendLine($"{ParseResultExtensions.Indent(indent + 1)}Comparison: {comparsionAtom.literal}");
+            sb.AppendLine($"{ParseResultExtensions.Indent(indent + 1)}Expression (LHS - RHS):");
+            sb.Append(exprs.ToString(indent + 2));
+            return sb.ToString();
         }
     }
 

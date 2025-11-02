@@ -42,6 +42,9 @@ namespace math_parser.tokenizer
         {
             return new Fraction(integerPart * MathUtils.Pow(10, -decimalExponent) + decimalMantissa, MathUtils.Pow(10, -decimalExponent));
         }
+
+        public override string ToString() => ToString(0);
+        public string ToString(int indent) => $"{ParseResultExtensions.Indent(indent)}NumberResult: {AsFraction()}\n";
     }
 
     public class Number : Group<ParseResult, NumberResult>

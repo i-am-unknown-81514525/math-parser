@@ -13,6 +13,7 @@ namespace math_parser.atom
         public static readonly ArithematicSymbolAtom Sub = new ArithematicSymbolAtom("-");
         public static readonly ArithematicSymbolAtom Mul = new ArithematicSymbolAtom("*");
         public static readonly ArithematicSymbolAtom Div = new ArithematicSymbolAtom("/");
+        public static readonly ArithematicSymbolAtom StongMul = new ArithematicSymbolAtom("**");
     }
 
     public class ComparsionSymbolAtom : SymbolAtom

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace math_parser.tokenizer
 {
@@ -10,6 +11,18 @@ namespace math_parser.tokenizer
         public TokenSequenceResult(IEnumerable<S> r)
         {
             parseResult = r.ToArray();
+        }
+
+        public override string ToString() => ToString(0);
+        public string ToString(int indent)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"{ParseResultExtensions.Indent(indent)}TokenSequenceResult:");
+            foreach (var result in parseResult)
+            {
+                sb.Append(result.ToString(indent + 1));
+            }
+            return sb.ToString();
         }
     }
 

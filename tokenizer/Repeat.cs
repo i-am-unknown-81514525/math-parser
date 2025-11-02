@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using System.Text;
 
 namespace math_parser.tokenizer
 {
@@ -40,7 +41,20 @@ namespace math_parser.tokenizer
         public static implicit operator Amount(int v) => new Amount(v);
     }
 
-    public class RepeatListResult<S> : List<S>, ParseResult where S : ParseResult {}
+    public class RepeatListResult<S> : List<S>, ParseResult where S : ParseResult
+    {
+        public override string ToString() => ToString(0);
+        public string ToString(int indent)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"{ParseResultExtensions.Indent(indent)}RepeatListResult ({this.Count} items):");
+            foreach (var result in this)
+            {
+                sb.Append(result.ToString(indent + 1));
+            }
+            return sb.ToString();
+        }
+    }
 
     public class Repeat<S> : Token<RepeatListResult<S>> where S : ParseResult
     {
