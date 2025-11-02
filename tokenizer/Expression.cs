@@ -222,9 +222,9 @@ namespace math_parser.tokenizer
                             ),
                             new TokenSequence<ParseResult>(
                                 new Maybe<OppoSignResult>(new OppoSign()),
-                                new VariableAtom(),
+                                new VariableAtom(), 
                                 new Maybe<MathAtomResult>(
-                                new Bracketed<ExprResult>(new LazyExpression())
+                                    new Bracketed<ExprResult>(new LazyExpression())
                                 )
                             )
                         )
