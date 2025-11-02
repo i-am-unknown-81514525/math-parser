@@ -31,17 +31,19 @@ namespace math_parser.tokenizer
                 IToken<S> token = options[i];
                 if (token.CanPartialParse(stream))
                 {
+                    CharacterStream inner = stream.Fork();
                     try
                     {
+                        S v = token.Parse(inner);
                         return token.Parse(stream);
                     }
                     catch (TokenParseException)
                     {
-                        throw new TokenParseNoBacktrackException($"No valid path, Attempt path {i} which successfully partial parse but failed to be parsed entirely");
+                        throw new TokenParseNoBacktrackException($"No valid path, Attempt path {i} which successfully partial parse but failed to be parsed entirely", stream.ptr, stream.Peek(20));
                     }
                 }
             }
-            throw new TokenParseBacktrackException("No valid path"); // This is using backtrack instead of no backtrack as the essential identical path
+            throw new TokenParseBacktrackException("No valid path", stream.ptr, stream.Peek(20)); // This is using backtrack instead of no backtrack as the essential identical path
         }
 
         public override bool CanPartialParse(CharacterStream stream)
@@ -72,7 +74,7 @@ namespace math_parser.tokenizer
 
                 }
             }
-            throw new TokenParseBacktrackException("No valid path");
+            throw new TokenParseBacktrackException("No valid path", stream.ptr, stream.Peek(20));
         }
     }
 }

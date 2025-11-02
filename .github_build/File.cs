@@ -8,7 +8,10 @@ namespace test{
     {
         public static void Main(string[] args)
         {
-
+            Keyword.PushKeyword("MAX");
+            Keyword.PushKeyword("ST");
+            Keyword.PushKeyword("END");
+            
             TokenSequence<ParseResult> tree = new TokenSequence<ParseResult>(
                 new Literal("MAX"),
                 new PotentialSpace(),

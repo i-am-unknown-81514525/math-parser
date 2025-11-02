@@ -53,8 +53,20 @@ namespace math_parser.tokenizer
                     new Literal("-"),
                     new Literal("")
                 ),
+                new OrNoBacktrack<ParseResult>(
+                    new Literal("1"),
+                    new Literal("2"),
+                    new Literal("3"),
+                    new Literal("4"),
+                    new Literal("5"),
+                    new Literal("6"),
+                    new Literal("7"),
+                    new Literal("8"),
+                    new Literal("9")
+                ),
                 new Repeat<ParseResult>(
                     new OrNoBacktrack<ParseResult>(
+                        new Literal("0"),
                         new Literal("1"),
                         new Literal("2"),
                         new Literal("3"),
@@ -67,20 +79,6 @@ namespace math_parser.tokenizer
                     ),
                     0,
                     Amount.Unbound
-                ),
-                new Maybe<ParseResult>(
-                    new OrNoBacktrack<ParseResult>(
-                        new Literal("0"),
-                        new Literal("1"),
-                        new Literal("2"),
-                        new Literal("3"),
-                        new Literal("4"),
-                        new Literal("5"),
-                        new Literal("6"),
-                        new Literal("7"),
-                        new Literal("8"),
-                        new Literal("9")
-                    )
                 ),
                 new Maybe<ParseResult>(
                     new TokenSequence<ParseResult>(
@@ -138,7 +136,7 @@ namespace math_parser.tokenizer
         {
             CharacterStream cp = stream.Clone();
             inner_token.Parse(cp);
-            string content = stream.Take(stream.ptr - cp.ptr);
+            string content = stream.Take(cp.ptr - stream.ptr);
             if (content.Contains("."))
             {
                 string[] all = content.Split('.');
@@ -150,7 +148,7 @@ namespace math_parser.tokenizer
                 string right = all[1];
                 int r_length = right.Length;
                 BigInteger integerPart = BigInteger.Parse(left);
-                BigInteger mantissa = BigInteger.Parse(right.TrimStart('.'));
+                BigInteger mantissa = BigInteger.Parse(right.TrimStart('0'));
                 BigInteger exponent = new BigInteger(-r_length);
                 return new NumberResult(integerPart, mantissa, exponent);
             }

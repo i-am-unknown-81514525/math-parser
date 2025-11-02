@@ -45,14 +45,15 @@ namespace math_parser.tokenizer
                 CharacterStream inner = stream.Clone();
                 try
                 {
-                    return option.Parse(inner);
+                    S v = option.Parse(inner);
+                    return option.Parse(stream);
                 }
                 catch (TokenParseException)
                 {
 
                 }
             }
-            throw new TokenParseBacktrackException("No valid path"); // i.e. we have backtrack all possible options
+            throw new TokenParseBacktrackException("No valid path", stream.ptr, stream.Peek(20)); // i.e. we have backtrack all possible options
         }
 
         public override CharacterStream PartialParse(CharacterStream stream)
@@ -70,7 +71,7 @@ namespace math_parser.tokenizer
 
                 }
             }
-            throw new TokenParseBacktrackException("No valid path");
+            throw new TokenParseBacktrackException("No valid path", stream.ptr, stream.Peek(20));
         }
     }
 }

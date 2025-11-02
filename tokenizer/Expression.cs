@@ -45,7 +45,10 @@ namespace math_parser.tokenizer
                 {
                     ret.Add(term);
                 }
-                ret[idx] = new Term(ret[idx].coefficient + term.coefficient, term.term_name);
+                else
+                {
+                    ret[idx] = new Term(ret[idx].coefficient + term.coefficient, term.term_name);
+                }
             }
             return new ExprResult(ret.ToArray());
         }
@@ -331,6 +334,16 @@ namespace math_parser.tokenizer
                     atoms.Add(new Value(expr));
                 }
             }
+            foreach (Atom atom in atoms)
+            {
+                Console.Write(atom);
+                if (atom is Value v)
+                {
+                    Console.Write($"({v.inner.terms[0].coefficient}, {v.inner.terms[0].term_name})");
+                }
+                Console.Write(" ");
+            }
+            Console.Write("\n");
             return ParseExpr(new Queue<Atom>(atoms), 0).Calc();
         }
         // Core Dumped, ‘This Simple Algorithm Powers Real Interpreters: Pratt Parsing’, YouTube. Accessed: May 23, 2025. [Online]. Available: https://youtu.be/0c8b7YfsBKJs
@@ -349,10 +362,10 @@ namespace math_parser.tokenizer
                 {
                     break;
                 }
-                Atom next_op = tokens.Dequeue();
+                Atom next_op = tokens.Peek();
                 if (!(next_op is ArithematicSymbolAtom))
                 {
-                    throw new PrattParseError("Failed lhs parse op");
+                    throw new PrattParseError($"Failed lhs parse op, atom: {next_op}");
                 }
                 ArithematicSymbolAtom op_raw = (ArithematicSymbolAtom)next_op;
                 (int leftBindingPower, int rightBindingPower) = binding_power[(ArithematicSymbolAtom)next_op];
@@ -360,6 +373,7 @@ namespace math_parser.tokenizer
                 {
                     break;
                 }
+                tokens.Dequeue(); // Consume the operator now.
                 IASTNode<ExprResult> rhs = ParseExpr(tokens, rightBindingPower);
                 lhs = new Dictionary<ArithematicSymbolAtom, IASTNode<ExprResult>>
                 {

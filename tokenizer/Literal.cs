@@ -47,7 +47,7 @@ namespace math_parser.tokenizer
             {
                 return Constructor(content);
             }
-            throw new TokenParseBacktrackException("Not valid path");
+            throw new TokenParseBacktrackException($"Not valid path, expected literal {content}", stream.ptr, stream.Peek(20));
         }
 
         public override CharacterStream PartialParse(CharacterStream stream)
@@ -57,7 +57,7 @@ namespace math_parser.tokenizer
             {
                 return stream;
             }
-            throw new TokenParseBacktrackException("Not valid path");
+            throw new TokenParseBacktrackException($"Not valid path, expected literal {content}", stream.ptr, stream.Peek(20));
         }
     }
 }

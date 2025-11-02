@@ -38,7 +38,13 @@ namespace math_parser.tokenizer
 
         public string Peek(int amount)
         {
+            if (amount == 0) return "";
             return this._base.SubString(ptr, amount);
+        }
+
+        public string PeekAll()
+        {
+            return this._base.SubString(ptr);
         }
         
         public void Advance(int amount)

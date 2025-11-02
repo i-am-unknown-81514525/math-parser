@@ -111,11 +111,16 @@ namespace math_parser.tokenizer
             CharacterStream ori = stream.Fork();
             CharacterStream curr = stream.Fork();
             foreach (IToken<S> token in immutable_tokens)
-            {
-                token.PartialParse(curr);
-                if (curr != ori)
+            {   try
                 {
-                    break;
+                    token.PartialParse(curr);
+                    if (curr != ori)
+                    {
+                        break;
+                    }
+                }
+                catch (TokenParseException) {
+                    return false;
                 }
             }
             return true;

@@ -82,12 +82,43 @@ namespace math_parser.tokenizer
         )
         { }
 
+        public override bool CanParse(CharacterStream stream)
+        {
+            if (Keyword.IsStartWithKeyword(stream.PeekAll()))
+            {
+                return false;
+            }
+            return base.CanParse(stream);
+        }
+
         public override MathLiteralResult Parse(CharacterStream stream)
         {
+            if (Keyword.IsStartWithKeyword(stream.PeekAll()))
+            {
+                throw new TokenParseBacktrackException($"Not valid path while attempting to parse keyword", stream.ptr, stream.Peek(20));
+            }
             CharacterStream cp = stream.Fork();
             inner_token.Parse(cp);
             string content = stream.TakeTo(cp);
             return new MathLiteralResult(content);
+        }
+
+        public override bool CanPartialParse(CharacterStream stream)
+        {
+            if (Keyword.IsStartWithKeyword(stream.PeekAll()))
+            {
+                return false;
+            }
+            return base.CanPartialParse(stream);
+        }
+
+        public override CharacterStream PartialParse(CharacterStream stream)
+        {
+            if (Keyword.IsStartWithKeyword(stream.PeekAll()))
+            {
+                throw new TokenParseBacktrackException($"Not valid path while attempting to parse keyword", stream.ptr, stream.Peek(20));
+            }
+            return base.PartialParse(stream);
         }
     }
 }

@@ -37,11 +37,27 @@ namespace math_parser.utils
 
         public string SubString(int startIndex, int length)
         {
+            if (length <= 0)
+            {
+                return "";
+            }
+            if (startIndex + 1 >= content.Length)
+            {
+                return "";
+            }
+            if (startIndex + length + 1 >= content.Length)
+            {
+                length = content.Length - startIndex - 1;
+            }
             return this.content.Substring(startIndex, length);
         }
 
         public string SubString(int startIndex)
         {
+            if (startIndex + 1 >= content.Length)
+            {
+                return "";
+            }
             return this.content.Substring(startIndex);
         }
 
