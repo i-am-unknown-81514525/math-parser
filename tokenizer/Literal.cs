@@ -43,8 +43,9 @@ namespace math_parser.tokenizer
         public override S Parse(CharacterStream stream)
         {
             if (content.Length == 0) return Constructor(content);
-            if (stream.Take(content.Length) == content)
+            if (stream.Peek(content.Length) == content)
             {
+                stream.Take(content.Length);
                 return Constructor(content);
             }
             throw new TokenParseBacktrackException($"Not valid path, expected literal {content}", stream.ptr, stream.Peek(20));
