@@ -8,6 +8,7 @@ namespace math_parser.tokenizer
 
         public static void PushKeyword(string keyword)
         {
+            if (keywords.Contains(keyword)) return;
             keywords.Add(keyword);
         }
 
