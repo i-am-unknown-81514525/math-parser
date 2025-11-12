@@ -326,9 +326,9 @@ namespace math_parser.tokenizer
             List<Atom> atoms = new List<Atom>();
 
             var parseTree = inner_token.Parse(stream);
-            Console.WriteLine("--- Parse Tree ---");
-            Console.WriteLine(parseTree.Print());
-            Console.WriteLine("------------------");
+            //Console.WriteLine("--- Parse Tree ---");
+            //Console.WriteLine(parseTree.Print());
+            //Console.WriteLine("------------------");
             List<MathAtomResult> linear_parse = Recur(parseTree);
 
             bool last_is_value = false;
@@ -376,29 +376,29 @@ namespace math_parser.tokenizer
                     atoms.Add(new Value(expr));
                 }
             }
-            foreach (Atom atom in atoms)
-            {
-                Console.Write(atom.GetType().Name);
-                if (atom is Value v)
-                {
-                    Console.Write("(");
-                    for (int i = 0; i < v.inner.terms.Length; i++)
-                    {
-                        var term = v.inner.terms[i];
-                        Console.Write($"({term.coefficient}, '{term.term_name}')");
-                        if (i < v.inner.terms.Length - 1)
-                        {
-                            Console.Write(", ");
-                        }
-                    }
-                    Console.Write(")");
-                } else if (atom is ArithematicSymbolAtom op)
-                {
-                    Console.Write($"({op.literal})");
-                }
-                Console.Write(" ");
-            }
-            Console.Write("\n");
+            //foreach (Atom atom in atoms)
+            //{
+            //    Console.Write(atom.GetType().Name);
+            //    if (atom is Value v)
+            //    {
+            //        Console.Write("(");
+            //        for (int i = 0; i < v.inner.terms.Length; i++)
+            //        {
+            //            var term = v.inner.terms[i];
+            //            Console.Write($"({term.coefficient}, '{term.term_name}')");
+            //            if (i < v.inner.terms.Length - 1)
+            //            {
+            //                Console.Write(", ");
+            //            }
+            //        }
+            //        Console.Write(")");
+            //    } else if (atom is ArithematicSymbolAtom op)
+            //    {
+            //        Console.Write($"({op.literal})");
+            //    }
+            //    Console.Write(" ");
+            //}
+            //Console.Write("\n");
             return ParseExpr(new Queue<Atom>(atoms), 0).Calc();
         }
         // Core Dumped, ‘This Simple Algorithm Powers Real Interpreters: Pratt Parsing’, YouTube. Accessed: May 23, 2025. [Online]. Available: https://youtu.be/0c8b7YfsBKJs
