@@ -40,6 +40,7 @@ namespace math_parser.tokenizer
 
         public override S Parse(CharacterStream stream)
         {
+            List<string> expected = new List<string>();
             foreach (IToken<S> option in options)
             {
                 CharacterStream inner = stream.Clone();
@@ -49,16 +50,17 @@ namespace math_parser.tokenizer
                     stream.JumpForwardTo(inner);
                     return v;
                 }
-                catch (TokenParseException)
+                catch (TokenParseException e)
                 {
-
+                    expected.AddRange(e.GetExpectedTokens());
                 }
             }
-            throw new TokenParseBacktrackException("No valid path", stream.ptr, stream.Peek(20)); // i.e. we have backtrack all possible options
+            throw new TokenParseBacktrackException("No valid path", stream.ptr, expected, stream.Peek(20)); // i.e. we have backtrack all possible options
         }
 
         public override CharacterStream PartialParse(CharacterStream stream)
         {
+            List<string> expected = new List<string>();
             foreach (IToken<S> option in options)
             {
                 CharacterStream inner = stream.Clone();
@@ -67,12 +69,12 @@ namespace math_parser.tokenizer
                     option.PartialParse(inner);
                     return inner;
                 }
-                catch (TokenParseException)
+                catch (TokenParseException e)
                 {
-
+                    expected.AddRange(e.GetExpectedTokens());
                 }
             }
-            throw new TokenParseBacktrackException("No valid path", stream.ptr, stream.Peek(20));
+            throw new TokenParseBacktrackException("No valid path", stream.ptr, expected, stream.Peek(20));
         }
     }
 }

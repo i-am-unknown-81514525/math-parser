@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace math_parser.tokenizer
 {
@@ -48,7 +49,7 @@ namespace math_parser.tokenizer
                 stream.Take(content.Length);
                 return Constructor(content);
             }
-            throw new TokenParseBacktrackException($"Not valid path, expected literal {content}", stream.ptr, stream.Peek(20));
+            throw new TokenParseBacktrackException($"Not valid path, expected literal {content}", stream.ptr, new List<string>() {$"\"{content}\""},stream.Peek(20));
         }
 
         public override CharacterStream PartialParse(CharacterStream stream)
@@ -58,7 +59,7 @@ namespace math_parser.tokenizer
             {
                 return stream;
             }
-            throw new TokenParseBacktrackException($"Not valid path, expected literal {content}", stream.ptr, stream.Peek(20));
+            throw new TokenParseBacktrackException($"Not valid path, expected literal {content}", stream.ptr, new List<string>() {$"\"{content[0]}\""},stream.Peek(20));
         }
     }
 }
