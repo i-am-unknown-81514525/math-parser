@@ -15,7 +15,7 @@ namespace math_parser.tokenizer
             int ptr, 
             List<string> expected, 
             string next = "N/A"
-        ) : base($"{reason} at pointer {ptr}, Expected {string.Join(", ", expected)}, Procedding stream: {next}")
+        ) : base($"{reason} at pointer {ptr}, Expected [{string.Join(", ", expected)}], Procedding stream: {next}".Replace("\n", "\\n"))
         {
             this.expectedTokens = expected.ToList();
             this.reason = reason;
