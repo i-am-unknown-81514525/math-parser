@@ -6,7 +6,7 @@ namespace math_parser.ast
 
         public AstValue1(T value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         public T Calc() => Value;
@@ -18,7 +18,7 @@ namespace math_parser.ast
 
         public AstValue1(TS value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         public abstract T Calc();

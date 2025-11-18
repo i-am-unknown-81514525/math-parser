@@ -9,7 +9,7 @@ namespace math_parser.tokenizer
         public readonly string Reason;
         public readonly int Ptr;
         public readonly string Next;
-        private List<string> _expectedTokens = new List<string>();
+        private readonly List<string> _expectedTokens;
         public TokenParseException(
             string reason, 
             int ptr, 
@@ -17,10 +17,10 @@ namespace math_parser.tokenizer
             string next = "N/A"
         ) : base($"{reason} at pointer {ptr}, Expected [{string.Join(", ", expected).Replace("\n", "\\n").Replace("\r", "\\r")}], Procedding stream: {next.Replace("\n", "\\n").Replace("\r", "\\r")}")
         {
-            this._expectedTokens = expected.ToList();
-            this.Reason = reason;
-            this.Ptr = ptr;
-            this.Next = next;
+            _expectedTokens = expected.ToList();
+            Reason = reason;
+            Ptr = ptr;
+            Next = next;
         }
 
         public string[] GetExpectedTokens()
@@ -30,7 +30,7 @@ namespace math_parser.tokenizer
 
         public virtual TokenParseException AddExpectedTokens(params string[] tokens)
         {
-            List<string> expectedTokens = this._expectedTokens.ToList();
+            List<string> expectedTokens = _expectedTokens.ToList();
             expectedTokens.AddRange(tokens);
             return new TokenParseException(
                 Reason, 

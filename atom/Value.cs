@@ -8,7 +8,7 @@ namespace math_parser.atom
 
         public Value(ExprResult inner)
         {
-            this.Inner = inner;
+            Inner = inner;
         }
     }
 }

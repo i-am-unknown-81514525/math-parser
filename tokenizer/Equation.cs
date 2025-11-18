@@ -11,8 +11,8 @@ namespace math_parser.tokenizer
 
         public EqResult(ExprResult result, atom.ComparsionSymbolAtom atom)
         {
-            this.Exprs = result;
-            this.ComparsionAtom = atom;
+            Exprs = result;
+            ComparsionAtom = atom;
         }
 
         public override string ToString() => ToString(0);

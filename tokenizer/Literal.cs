@@ -17,7 +17,7 @@ namespace math_parser.tokenizer
         public Literal(string value)
         {
             if (value is null) throw new NullReferenceException("Literal cannot be null");
-            this.Content = value;
+            Content = value;
         }
 
         public virtual TS Constructor(string content)

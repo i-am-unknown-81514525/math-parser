@@ -15,13 +15,13 @@ namespace math_parser.math
             if (denominator == 0) throw new DivideByZeroException("Denominator cannot be 0");
             if (denominator < 0) { numerator = -numerator; denominator = -denominator; }
             BigInteger value = MathUtils.Factorize(numerator, denominator);
-            this.Numerator = numerator / value;
-            this.Denominator = denominator / value;
+            Numerator = numerator / value;
+            Denominator = denominator / value;
         }
 
         public Fraction(long numerator, long denominator)
         {
-            (this.Numerator, this.Denominator) = new Fraction((BigInteger)numerator, (BigInteger)denominator);
+            (Numerator, Denominator) = new Fraction((BigInteger)numerator, (BigInteger)denominator);
             // if (denominator == 0) throw new DivideByZeroException("Denominator cannot be 0");
             // long value = MathUtils.factorize(numerator, denominator);
             // this.numerator = numerator / value;
@@ -30,7 +30,7 @@ namespace math_parser.math
 
         public Fraction(BigInteger numerator, long denominator)
         {
-            (this.Numerator, this.Denominator) = new Fraction((BigInteger)numerator, (BigInteger)denominator);
+            (Numerator, Denominator) = new Fraction(numerator, (BigInteger)denominator);
             // if (denominator == 0) throw new DivideByZeroException("Denominator cannot be 0");
             // BigInteger value = MathUtils.factorize(numerator, (BigInteger)denominator);
             // this.numerator = numerator / value;
@@ -39,7 +39,7 @@ namespace math_parser.math
 
         public Fraction(long numerator, BigInteger denominator)
         {
-            (this.Numerator, this.Denominator) = new Fraction((BigInteger)numerator, (BigInteger)denominator);
+            (Numerator, Denominator) = new Fraction((BigInteger)numerator, denominator);
             // if (denominator == 0) throw new DivideByZeroException("Denominator cannot be 0");
             // BigInteger value = MathUtils.factorize((BigInteger)numerator, denominator);
             // this.numerator = numerator / value;
@@ -85,12 +85,12 @@ namespace math_parser.math
                 }
                 it += 1;
             }
-            (this.Numerator, this.Denominator) = new Fraction(numerator, denominator);
+            (Numerator, Denominator) = new Fraction(numerator, denominator);
         }
 
         public Fraction(string value)
         {
-            Fraction f = Fraction.Parse(value);
+            Fraction f = Parse(value);
             Denominator = f.Denominator;
             Numerator = f.Numerator;
         }
@@ -107,7 +107,7 @@ namespace math_parser.math
 
         public static implicit operator (BigInteger numerator, BigInteger denominator)(Fraction fraction) => fraction.AsTuple();
 
-        public static implicit operator Fraction(uint value) => new Fraction((long)value);
+        public static implicit operator Fraction(uint value) => new Fraction(value);
         // Operator conversion precedence fix for the compiler, with AI advise used, fixed SplitHandler.Update (totalFrac > 1 || i == totalPrioityTier - 1)
         // Google Gemini 2.5 Flash via Gemini app, Accessed 24 July 2025, https://g.co/gemini/share/30770d6d34e9
 
@@ -117,8 +117,8 @@ namespace math_parser.math
 
         public void Deconstruct(out BigInteger numerator, out BigInteger denominator)
         {
-            numerator = this.Numerator;
-            denominator = this.Denominator;
+            numerator = Numerator;
+            denominator = Denominator;
         }
 
         public Fraction Simplify()
@@ -135,9 +135,9 @@ namespace math_parser.math
         public Fraction Add(Fraction other)
         {
             // 3/4 + 5/8 = (3*8+5*4)/8*4, = 44/32 = 11/8
-            BigInteger v1 = MathUtils.Factorize(this.Denominator, other.Denominator);
-            BigInteger denominator = this.Denominator / v1 * other.Denominator;
-            BigInteger leftNum = denominator / this.Denominator * this.Numerator;
+            BigInteger v1 = MathUtils.Factorize(Denominator, other.Denominator);
+            BigInteger denominator = Denominator / v1 * other.Denominator;
+            BigInteger leftNum = denominator / Denominator * Numerator;
             BigInteger rightNum = denominator / other.Denominator * other.Numerator;
             BigInteger numerator = leftNum + rightNum;
             return new Fraction(numerator, denominator);
@@ -166,9 +166,9 @@ namespace math_parser.math
 
         public Fraction Multiply(Fraction other)
         {
-            BigInteger v1 = MathUtils.Factorize(this.Numerator, other.Denominator);
-            BigInteger v2 = MathUtils.Factorize(other.Numerator, this.Denominator);
-            Fraction left = new Fraction(this.Numerator / v1, this.Denominator / v2);
+            BigInteger v1 = MathUtils.Factorize(Numerator, other.Denominator);
+            BigInteger v2 = MathUtils.Factorize(other.Numerator, Denominator);
+            Fraction left = new Fraction(Numerator / v1, Denominator / v2);
             Fraction right = new Fraction(other.Numerator / v2, other.Denominator / v1);
             BigInteger numerator = left.Numerator * right.Numerator;
             BigInteger denominator = left.Denominator * right.Denominator;
@@ -276,7 +276,7 @@ namespace math_parser.math
 
         public bool Equals(Fraction obj)
         {
-            return this == (Fraction)obj;
+            return this == obj;
         }
 
         public override int GetHashCode()
@@ -323,7 +323,7 @@ namespace math_parser.math
         {
             frac = new Fraction(0, 1);
             if (!RegexChecker.IsFracOrNum(value)) return false;
-            frac = Fraction.Parse(value);
+            frac = Parse(value);
             return true;
         }
 
@@ -339,7 +339,7 @@ namespace math_parser.math
             {
                 throw new InvalidOperationException("Cannot have negative amount of significant figure");
             }
-            bool haveInitial = this.Abs() >= 1;
+            bool haveInitial = Abs() >= 1;
             BigInteger integer = Numerator / Denominator;
             if (this < 0)
             {

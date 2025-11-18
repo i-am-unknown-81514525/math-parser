@@ -7,22 +7,22 @@ namespace math_parser.utils
 
         public SharedImmutableString(string content)
         {
-            this._content = content;
+            _content = content;
         }
 
         public char this[int idx]
         {
-            get => this._content[idx];
+            get => _content[idx];
         }
 
         public SharedImmutableString(char c, int length)
         {
-            this._content = new string(c, length);
+            _content = new string(c, length);
         }
 
-        public int length
+        public int Length
         {
-            get => this._content.Length;
+            get => _content.Length;
         }
 
         public SharedImmutableString Clone()
@@ -41,15 +41,15 @@ namespace math_parser.utils
             {
                 return "";
             }
-            if (startIndex + 1 >= _content.Length)
+            if (startIndex + 1 >= Length)
             {
                 return "";
             }
-            if (startIndex + length >= _content.Length)
+            if (startIndex + length >= Length)
             {
-                length = _content.Length - startIndex;
+                length = Length - startIndex;
             }
-            return this._content.Substring(startIndex, length);
+            return _content.Substring(startIndex, length);
         }
 
         public string SubString(int startIndex)
@@ -58,11 +58,11 @@ namespace math_parser.utils
             {
                 return "";
             }
-            return this._content.Substring(startIndex);
+            return _content.Substring(startIndex);
         }
 
         public string AsRaw() {
-            return this._content;
+            return _content;
         }
     }
 }

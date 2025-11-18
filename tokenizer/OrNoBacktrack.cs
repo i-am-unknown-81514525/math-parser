@@ -9,14 +9,14 @@ namespace math_parser.tokenizer
 
         public OrNoBacktrack(params IToken<TS>[] options)
         {
-            this._options = options.ToArray();
+            _options = options.ToArray();
         }
 
         public override bool CanParse(CharacterStream stream)
         {
             try
             {
-                this.Parse(stream.Clone());
+                Parse(stream.Clone());
                 return true;
             }
             catch (TokenParseException)
@@ -70,7 +70,7 @@ namespace math_parser.tokenizer
         {
             try
             {
-                this.PartialParse(stream.Clone());
+                PartialParse(stream.Clone());
                 return true;
             }
             catch (TokenParseException)

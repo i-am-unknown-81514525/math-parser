@@ -17,8 +17,8 @@ namespace math_parser.tokenizer
 
         public Term(Fraction coefficient, string termName)
         {
-            this.Coefficient = coefficient;
-            this.TermName = termName;
+            Coefficient = coefficient;
+            TermName = termName;
         }
 
         public static implicit operator Term(Fraction v) => new Term(v, "");
@@ -31,7 +31,7 @@ namespace math_parser.tokenizer
 
         public ExprResult(Term[] terms)
         {
-            this.Terms = terms.ToArray();
+            Terms = terms.ToArray();
         }
 
         public bool isIntegerOnly() => Terms.Where(x => x.TermName != "").Count() == 0;
@@ -205,7 +205,7 @@ namespace math_parser.tokenizer
                 new Repeat<ParseResult>(
                     new TokenSequence<ParseResult>(
                         new PotentialSpace(),
-                        new math_parser.tokenizer.ArithmeticSymbolAtom(),
+                        new ArithmeticSymbolAtom(),
                         new PotentialSpace(),
                         new Or<ParseResult>(
                             new TokenSequence<ParseResult>(
@@ -310,7 +310,7 @@ namespace math_parser.tokenizer
                 }
                 else if (result is MathAtomResult atom)
                 {
-                    curr.Add((MathAtomResult)atom);
+                    curr.Add(atom);
                 }
                 return curr;
             }
@@ -336,7 +336,7 @@ namespace math_parser.tokenizer
             {
                 if (result is OppoSignResult)
                 {
-                    atoms.Add(new Value((ExprResult)(Term)(Fraction)(-1)));
+                    atoms.Add(new Value((Term)(Fraction)(-1)));
                     atoms.Add(ArithematicSymbolAtom.StongMul);
                     lastIsValue = false;
                 }

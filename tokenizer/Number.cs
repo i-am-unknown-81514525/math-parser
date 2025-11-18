@@ -33,9 +33,9 @@ namespace math_parser.tokenizer
                 decimalMantissa /= 10;
                 decimalExponent++; // Closer to 0, I am not doing something wrong since it is originally negative
             }
-            this.IntegerPart = integerPart;
-            this.DecimalMantissa = decimalMantissa;
-            this.DecimalExponent = decimalExponent;
+            IntegerPart = integerPart;
+            DecimalMantissa = decimalMantissa;
+            DecimalExponent = decimalExponent;
         }
 
         public Fraction AsFraction()

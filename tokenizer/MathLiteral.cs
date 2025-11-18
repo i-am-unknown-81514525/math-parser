@@ -6,7 +6,7 @@ namespace math_parser.tokenizer
 
         public MathLiteralResult(string literal)
         {
-            this.Literal = literal;
+            Literal = literal;
         }
 
         public override string ToString() => ToString(0);

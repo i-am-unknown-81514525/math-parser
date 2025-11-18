@@ -7,8 +7,8 @@ namespace math_parser.ast
 
         public AstOpNode2(IastNode<T> left, IastNode<T> right)
         {
-            this.Left = left;
-            this.Right = right;
+            Left = left;
+            Right = right;
         }
 
         public abstract T Calc();
@@ -21,8 +21,8 @@ namespace math_parser.ast
 
         public AstOpNode2(IastNode<T> left, IastNode<T> right)
         {
-            this.Left = left;
-            this.Right = right;
+            Left = left;
+            Right = right;
         }
 
         public abstract TO Calc();
@@ -35,8 +35,8 @@ namespace math_parser.ast
 
         public AstOpNode2(IastNode<TL> left, IastNode<TR> right)
         {
-            this.Left = left;
-            this.Right = right;
+            Left = left;
+            Right = right;
         }
 
         public abstract TO Calc();

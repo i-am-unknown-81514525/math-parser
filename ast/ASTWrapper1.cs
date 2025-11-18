@@ -6,7 +6,7 @@ namespace math_parser.ast
 
         public AstWrapper1(IastNode<T> inner)
         {
-            this.Inner = inner;
+            Inner = inner;
         }
 
         public T Calc() => Inner.Calc();

@@ -10,8 +10,8 @@ namespace math_parser.tokenizer
 
         public FracResult(NumberResult top, NumberResult bottom)
         {
-            this.Top = top;
-            this.Bottom = bottom;
+            Top = top;
+            Bottom = bottom;
         }
 
         public Fraction AsFraction() => Top.AsFraction() / Bottom.AsFraction();

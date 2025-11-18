@@ -44,7 +44,7 @@ namespace math_parser.tokenizer
         public string ToString(int indent)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"{ParseResultExtensions.Indent(indent)}RepeatListResult ({this.Count} items):");
+            sb.AppendLine($"{ParseResultExtensions.Indent(indent)}RepeatListResult ({Count} items):");
             foreach (var result in this)
             {
                 sb.Append(result.ToString(indent + 1));
@@ -62,7 +62,7 @@ namespace math_parser.tokenizer
 
         public Repeat(IToken<TS> token, Amount min, Amount max)
         {
-            this._token = token;
+            _token = token;
             if (min.isUnbound)
             {
                 min = new Amount(0);
@@ -71,8 +71,8 @@ namespace math_parser.tokenizer
             {
                 throw new ArgumentOutOfRangeException($"min({min}) must be less than or equal to max({max})");
             }
-            this._min = min;
-            this._max = max;
+            _min = min;
+            _max = max;
         }
 
         public override bool CanParse(CharacterStream stream)
@@ -83,7 +83,7 @@ namespace math_parser.tokenizer
             }
             try
             {
-                this.Parse(stream.Clone());
+                Parse(stream.Clone());
                 return true;
             }
             catch (TokenParseException) {

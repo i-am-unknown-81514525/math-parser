@@ -3,19 +3,19 @@ using math_parser.utils;
 
 namespace math_parser.tokenizer
 {
-    public class CharacterStream : System.IEquatable<CharacterStream>
+    public class CharacterStream : IEquatable<CharacterStream>
     {
         public readonly SharedImmutableString Base;
         public int ptr { get; internal set; } = 0;
 
         public CharacterStream(SharedImmutableString str)
         {
-            this.Base = str;
+            Base = str;
         }
 
         public CharacterStream(SharedImmutableString str, int ptr)
         {
-            this.Base = str;
+            Base = str;
             this.ptr = ptr;
         }
 
@@ -39,12 +39,12 @@ namespace math_parser.tokenizer
         public string Peek(int amount)
         {
             if (amount == 0) return "";
-            return this.Base.SubString(ptr, amount);
+            return Base.SubString(ptr, amount);
         }
 
         public string PeekAll()
         {
-            return this.Base.SubString(ptr);
+            return Base.SubString(ptr);
         }
         
         public void Advance(int amount)
@@ -65,7 +65,9 @@ namespace math_parser.tokenizer
             {
                 return right is null;
             }
-            return left.ptr == right.ptr && object.ReferenceEquals(left.Base, right.Base); // fastcheck, require copy to use the same shared immutable string
+
+            if (right is null) return false;
+            return left.ptr == right.ptr && ReferenceEquals(left.Base, right.Base); // fastcheck, require copy to use the same shared immutable string
         }
 
         public static bool operator !=(CharacterStream left, CharacterStream right) => !(left == right);
@@ -88,46 +90,43 @@ namespace math_parser.tokenizer
         public override bool Equals(object o)
         {
             if (o is null && this is null) return true;
-            if (o as CharacterStream is null) return false;
-            return this == (o as CharacterStream);
+            if (!(o is CharacterStream stream)) return false;
+            return this == stream;
         }
 
         public override int GetHashCode()
         {
-            return Base.GetHashCode() ^ ptr.GetHashCode();
+            return Base.GetHashCode();
         }
 
         public CharacterStream JumpForwardTo(CharacterStream src)
         {
-            if (!object.ReferenceEquals(src.Base, this.Base))
+            if (!ReferenceEquals(src.Base, Base))
             {
                 throw new InvalidOperationException("Not the same string");
             }
-            if (this.ptr > src.ptr)
+            if (ptr > src.ptr)
             {
                 throw new InvalidOperationException("You cannot jump backward");
             }
-            this.ptr = src.ptr;
+            ptr = src.ptr;
             return this;
         }
 
         public string TakeTo(CharacterStream src)
         {
-            if (!object.ReferenceEquals(src.Base, this.Base))
+            if (!ReferenceEquals(src.Base, Base))
             {
                 throw new InvalidOperationException("Not the same string");
             }
-            if (this.ptr > src.ptr)
+            if (ptr > src.ptr)
             {
                 throw new InvalidOperationException("You cannot jump backward");
             }
             return Take(src.ptr - ptr);
         }
         
-        public bool isEof
-        {
-            get => ptr + 1 >= Base.length;
-        }
+        public bool isEof => ptr + 1 >= Base.Length;
 
         // public static implicit operator (SyntaxDiscardResult, CharacterStream)(CharacterStream stream) => (SyntaxDiscardResult.Empty, stream);
     }
