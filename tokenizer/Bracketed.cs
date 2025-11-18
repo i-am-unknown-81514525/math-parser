@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using math_parser.math;
-
 namespace math_parser.tokenizer
 {
     public class Bracketed<TS> : Group<TokenSequenceResult<ParseResult>, TS> where TS : ParseResult

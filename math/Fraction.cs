@@ -1,8 +1,7 @@
 using System;
-using System.Text;
-using System.Numerics;
-using System.Linq;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Text;
 
 namespace math_parser.math
 {
@@ -148,7 +147,7 @@ namespace math_parser.math
             // Overflow safe
             if (Denominator == long.MinValue && Numerator == long.MinValue)
                 return new Fraction(1, 1);
-            else if (Denominator == long.MinValue)
+            if (Denominator == long.MinValue)
                 return new Fraction(Numerator, -Denominator);
             return new Fraction(-Numerator, Denominator);
         }
@@ -475,9 +474,10 @@ namespace math_parser.math
                 }
                 return builder.ToString();
             }
-            else if (
+
+            if (
                 (value.integer.Abs().ToString().Length + value.length_0 +
-                (value.remaining == 0 ? -1 : 1)) < length
+                 (value.remaining == 0 ? -1 : 1)) < length
             )
             {
                 builder.Append(value.integer.ToString());
@@ -490,13 +490,14 @@ namespace math_parser.math
                 }
                 return builder.ToString();
             }
-            else if (
+
+            if (
                 value.integer.Abs().ToString().Length < length
             )
             {
                 return value.integer.Abs().ToString();
             }
-            else
+
             {
                 bool isNeg = value.integer < 0;
                 string content = value.integer.Abs().ToString();

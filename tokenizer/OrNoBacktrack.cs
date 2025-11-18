@@ -51,16 +51,15 @@ namespace math_parser.tokenizer
                             stream.Peek(20)
                         );
                     }
-                } else
+                }
+
+                try
                 {
-                    try
-                    {
-                        token.PartialParse(stream.Clone());
-                    }
-                    catch (TokenParseException e)
-                    {
-                        globalExpected.AddRange(e.GetExpectedTokens());
-                    }
+                    token.PartialParse(stream.Clone());
+                }
+                catch (TokenParseException e)
+                {
+                    globalExpected.AddRange(e.GetExpectedTokens());
                 }
             }
             throw new TokenParseBacktrackException("No valid path", stream.ptr, globalExpected, stream.Peek(20)); // This is using backtrack instead of no backtrack as the essential identical path

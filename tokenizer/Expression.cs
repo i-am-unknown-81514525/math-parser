@@ -1,12 +1,10 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using math_parser.ast;
 using System.Text;
-using math_parser.math;
+using math_parser.ast;
 using math_parser.atom;
+using math_parser.math;
 
 namespace math_parser.tokenizer
 {
@@ -163,7 +161,7 @@ namespace math_parser.tokenizer
 
     public class Expression : Group<ParseResult, ExprResult>
     {
-        public static readonly Dictionary<ArithematicSymbolAtom, (int, int)> BindingPower = new Dictionary<ArithematicSymbolAtom, (int, int)>()
+        public static readonly Dictionary<ArithematicSymbolAtom, (int, int)> BindingPower = new Dictionary<ArithematicSymbolAtom, (int, int)>
         {
             {ArithematicSymbolAtom.Add, (1, 2) },
             {ArithematicSymbolAtom.Sub, (1, 2) },
@@ -315,7 +313,7 @@ namespace math_parser.tokenizer
                 return curr;
             }
 
-            Dictionary<string, ArithematicSymbolAtom> matcher = new Dictionary<string, ArithematicSymbolAtom>()
+            Dictionary<string, ArithematicSymbolAtom> matcher = new Dictionary<string, ArithematicSymbolAtom>
             {
                 {"+", ArithematicSymbolAtom.Add},
                 {"-", ArithematicSymbolAtom.Sub},

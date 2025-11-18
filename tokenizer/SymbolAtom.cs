@@ -1,6 +1,3 @@
-using System;
-using System.Text.RegularExpressions;
-
 namespace math_parser.tokenizer
 {
     public class SymbolAtom : Group<MathAtomResult>

@@ -1,5 +1,3 @@
-using System;
-
 namespace math_parser.tokenizer
 {
     public interface IToken : IToken<SyntaxDiscardResult>

@@ -1,5 +1,5 @@
-using math_parser.math;
 using System.Text;
+using math_parser.math;
 
 namespace math_parser.tokenizer
 {

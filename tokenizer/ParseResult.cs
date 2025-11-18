@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace math_parser.tokenizer
 {
     public interface ParseResult

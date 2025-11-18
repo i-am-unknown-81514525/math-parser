@@ -6,7 +6,7 @@ namespace math_parser.tokenizer
     public class CharacterStream : IEquatable<CharacterStream>
     {
         public readonly SharedImmutableString Base;
-        public int ptr { get; internal set; } = 0;
+        public int ptr { get; internal set; }
 
         public CharacterStream(SharedImmutableString str)
         {

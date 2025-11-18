@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using math_parser;
 
 namespace math_parser.tokenizer
 {
@@ -29,7 +28,7 @@ namespace math_parser.tokenizer
 
     public class Equation : Group<TokenSequenceResult<ParseResult>, EqResult>
     {
-        public static Dictionary<string, atom.ComparsionSymbolAtom> Mapping = new Dictionary<string, atom.ComparsionSymbolAtom>()
+        public static Dictionary<string, atom.ComparsionSymbolAtom> Mapping = new Dictionary<string, atom.ComparsionSymbolAtom>
         {
             {"=", atom.ComparsionSymbolAtom.Eq},
             {">=", atom.ComparsionSymbolAtom.Ge},
