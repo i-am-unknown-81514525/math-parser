@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace math_parser.math
 {
-    public struct Fraction : IComparable<Fraction>
+    public readonly struct Fraction : IComparable<Fraction>, IEquatable<Fraction>
     {
         public readonly BigInteger Numerator, Denominator;
 
@@ -271,6 +271,11 @@ namespace math_parser.math
         public override bool Equals(object obj)
         {
             if (!(obj is Fraction)) return false;
+            return this == (Fraction)obj;
+        }
+
+        public bool Equals(Fraction obj)
+        {
             return this == (Fraction)obj;
         }
 

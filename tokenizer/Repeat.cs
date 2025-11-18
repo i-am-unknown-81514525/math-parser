@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 using System.Text;
 
 namespace math_parser.tokenizer
@@ -12,16 +13,12 @@ namespace math_parser.tokenizer
         {
             if (amount < 0)
             {
-                throw new ArgumentOutOfRangeException("amount must be greater or equal to 0");
+                throw new ArgumentOutOfRangeException($"amount must be greater or equal to 0 (given: {amount}");
             }
             this.amount = (uint)(amount + 1);
         }
 
-        public bool isUnbound
-        {
-            get => amount == 0;
-            set { }
-        }
+        public bool isUnbound => amount == 0;
 
         public static Amount Unbound = new Amount();
 
@@ -60,8 +57,8 @@ namespace math_parser.tokenizer
     {
 
         IToken<TS> _token;
-        Amount _min;
-        Amount _max;
+        readonly Amount _min;
+        readonly Amount _max;
 
         public Repeat(IToken<TS> token, Amount min, Amount max)
         {
@@ -72,7 +69,7 @@ namespace math_parser.tokenizer
             }
             if (!max.isUnbound && min.value > max.value)
             {
-                throw new ArgumentOutOfRangeException("min must be less than or equal to max");
+                throw new ArgumentOutOfRangeException($"min({min}) must be less than or equal to max({max})");
             }
             this._min = min;
             this._max = max;
@@ -133,8 +130,9 @@ namespace math_parser.tokenizer
                         return results;
                     }
                 }
-                throw new InvalidOperationException("Wtf?");
             }
+
+            Debug.Assert(_min.value != null, "_min.value != null");
             for (uint i = (uint)_min.value; i < _max.value; i++)
             {
                 try
