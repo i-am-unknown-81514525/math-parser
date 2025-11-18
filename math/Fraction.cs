@@ -39,7 +39,7 @@ namespace math_parser.math
 
         public Fraction(long numerator, BigInteger denominator)
         {
-            (this.Numerator, this.Denominator) = new Fraction(numerator, (BigInteger)denominator);
+            (this.Numerator, this.Denominator) = new Fraction((BigInteger)numerator, (BigInteger)denominator);
             // if (denominator == 0) throw new DivideByZeroException("Denominator cannot be 0");
             // BigInteger value = MathUtils.factorize((BigInteger)numerator, denominator);
             // this.numerator = numerator / value;
