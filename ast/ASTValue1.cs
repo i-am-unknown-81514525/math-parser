@@ -1,24 +1,24 @@
 namespace math_parser.ast
 {
-    public class ASTValue1<T> : IASTNode<T>
+    public class AstValue1<T> : IastNode<T>
     {
-        public readonly T value;
+        public readonly T Value;
 
-        public ASTValue1(T value)
+        public AstValue1(T value)
         {
-            this.value = value;
+            this.Value = value;
         }
 
-        public T Calc() => value;
+        public T Calc() => Value;
     }
 
-    public abstract class ASTValue1<S, T> : IASTNode<T>
+    public abstract class AstValue1<TS, T> : IastNode<T>
     {
-        public readonly S value;
+        public readonly TS Value;
 
-        public ASTValue1(S value)
+        public AstValue1(TS value)
         {
-            this.value = value;
+            this.Value = value;
         }
 
         public abstract T Calc();

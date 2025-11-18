@@ -14,7 +14,7 @@ namespace math_parser.tokenizer
 
         public override OppoSignResult Parse(CharacterStream stream)
         {
-            inner_token.Parse(stream);
+            InnerToken.Parse(stream);
             return new OppoSignResult();
         }
     }

@@ -4,13 +4,13 @@ using System.Text;
 
 namespace math_parser.tokenizer
 {
-    public class TokenSequenceResult<S> : ParseResult where S : ParseResult
+    public class TokenSequenceResult<TS> : ParseResult where TS : ParseResult
     {
-        public S[] parseResult;
+        public TS[] ParseResult;
 
-        public TokenSequenceResult(IEnumerable<S> r)
+        public TokenSequenceResult(IEnumerable<TS> r)
         {
-            parseResult = r.ToArray();
+            ParseResult = r.ToArray();
         }
 
         public override string ToString() => ToString(0);
@@ -18,7 +18,7 @@ namespace math_parser.tokenizer
         {
             var sb = new StringBuilder();
             sb.AppendLine($"{ParseResultExtensions.Indent(indent)}TokenSequenceResult:");
-            foreach (var result in parseResult)
+            foreach (var result in ParseResult)
             {
                 sb.Append(result.ToString(indent + 1));
             }
@@ -26,45 +26,45 @@ namespace math_parser.tokenizer
         }
     }
 
-    public class TokenSequence<S> : Token<TokenSequenceResult<S>>, IEnumerable<IToken<S>> where S : ParseResult
+    public class TokenSequence<TS> : Token<TokenSequenceResult<TS>>, IEnumerable<IToken<TS>> where TS : ParseResult
     {
-        private List<IToken<S>> tokens = new List<IToken<S>>();
+        private List<IToken<TS>> _tokens = new List<IToken<TS>>();
         private bool _writable = true;
-        private IToken<S>[] immutable_tokens;
+        private IToken<TS>[] _immutableTokens;
 
         public TokenSequence()
         {
 
         }
         
-        public TokenSequence(params IToken<S>[] tokens)
+        public TokenSequence(params IToken<TS>[] tokens)
         {
-            immutable_tokens = (IToken<S>[])tokens.Clone();
+            _immutableTokens = (IToken<TS>[])tokens.Clone();
             _writable = false;
         }
 
-        public void Add(IToken<S> token)
+        public void Add(IToken<TS> token)
         {
-            tokens.Add(token);
+            _tokens.Add(token);
         }
 
         public void MakeImmutable()
         {
             if (!_writable) return;
             _writable = false;
-            immutable_tokens = tokens.ToArray();
-            tokens = null;
+            _immutableTokens = _tokens.ToArray();
+            _tokens = null;
         }
 
-        public IToken<S> this[int idx]
+        public IToken<TS> this[int idx]
         {
-            get => immutable_tokens[idx];
+            get => _immutableTokens[idx];
         }
 
-        public IEnumerator<IToken<S>> GetEnumerator()
+        public IEnumerator<IToken<TS>> GetEnumerator()
         {
             MakeImmutable();
-            return ((IEnumerable<IToken<S>>)immutable_tokens).GetEnumerator();
+            return ((IEnumerable<IToken<TS>>)_immutableTokens).GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -72,32 +72,32 @@ namespace math_parser.tokenizer
             return GetEnumerator();
         }
 
-        public static implicit operator TokenSequence<S>(List<IToken<S>> tokens)
+        public static implicit operator TokenSequence<TS>(List<IToken<TS>> tokens)
         {
-            return new TokenSequence<S>(tokens.ToArray());
+            return new TokenSequence<TS>(tokens.ToArray());
         }
 
-        public static implicit operator TokenSequence<S>(IToken<S>[] tokens)
+        public static implicit operator TokenSequence<TS>(IToken<TS>[] tokens)
         {
-            return new TokenSequence<S>(tokens.ToArray());
+            return new TokenSequence<TS>(tokens.ToArray());
         }
 
-        public override TokenSequenceResult<S> Parse(CharacterStream stream)
+        public override TokenSequenceResult<TS> Parse(CharacterStream stream)
         {
             MakeImmutable();
-            List<S> r = new List<S>();
-            foreach (IToken<S> token in immutable_tokens)
+            List<TS> r = new List<TS>();
+            foreach (IToken<TS> token in _immutableTokens)
             {
                 r.Add(token.Parse(stream));
             }
-            return new TokenSequenceResult<S>(r);
+            return new TokenSequenceResult<TS>(r);
         }
 
         public override bool CanParse(CharacterStream stream)
         {
             MakeImmutable();
             CharacterStream clone = stream.Fork();
-            foreach (IToken<S> token in immutable_tokens)
+            foreach (IToken<TS> token in _immutableTokens)
             {
                 if (!token.CanParse(clone)) return false;
             }
@@ -108,7 +108,7 @@ namespace math_parser.tokenizer
         {
             MakeImmutable();
             CharacterStream ori = stream.Fork();
-            foreach (IToken<S> token in immutable_tokens)
+            foreach (IToken<TS> token in _immutableTokens)
             {
                 token.PartialParse(stream);
                 if (stream != ori)
@@ -123,7 +123,7 @@ namespace math_parser.tokenizer
             MakeImmutable();
             CharacterStream ori = stream.Fork();
             CharacterStream curr = stream.Fork();
-            foreach (IToken<S> token in immutable_tokens)
+            foreach (IToken<TS> token in _immutableTokens)
             {   try
                 {
                     token.PartialParse(curr);

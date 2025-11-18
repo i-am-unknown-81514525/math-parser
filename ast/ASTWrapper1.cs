@@ -1,14 +1,14 @@
 namespace math_parser.ast
 {
-    public class ASTWrapper1<T> : IASTNode<T>
+    public class AstWrapper1<T> : IastNode<T>
     {
-        public readonly IASTNode<T> inner;
+        public readonly IastNode<T> Inner;
 
-        public ASTWrapper1(IASTNode<T> inner)
+        public AstWrapper1(IastNode<T> inner)
         {
-            this.inner = inner;
+            this.Inner = inner;
         }
 
-        public T Calc() => inner.Calc();
+        public T Calc() => Inner.Calc();
     }
 }

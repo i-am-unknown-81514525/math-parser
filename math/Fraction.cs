@@ -8,20 +8,20 @@ namespace math_parser.math
 {
     public struct Fraction : IComparable<Fraction>
     {
-        public readonly BigInteger numerator, denominator;
+        public readonly BigInteger Numerator, Denominator;
 
         public Fraction(BigInteger numerator, BigInteger denominator)
         {
             if (denominator == 0) throw new DivideByZeroException("Denominator cannot be 0");
             if (denominator < 0) { numerator = -numerator; denominator = -denominator; }
-            BigInteger value = MathUtils.factorize(numerator, denominator);
-            this.numerator = numerator / value;
-            this.denominator = denominator / value;
+            BigInteger value = MathUtils.Factorize(numerator, denominator);
+            this.Numerator = numerator / value;
+            this.Denominator = denominator / value;
         }
 
         public Fraction(long numerator, long denominator)
         {
-            (this.numerator, this.denominator) = new Fraction((BigInteger)numerator, (BigInteger)denominator);
+            (this.Numerator, this.Denominator) = new Fraction((BigInteger)numerator, (BigInteger)denominator);
             // if (denominator == 0) throw new DivideByZeroException("Denominator cannot be 0");
             // long value = MathUtils.factorize(numerator, denominator);
             // this.numerator = numerator / value;
@@ -30,7 +30,7 @@ namespace math_parser.math
 
         public Fraction(BigInteger numerator, long denominator)
         {
-            (this.numerator, this.denominator) = new Fraction((BigInteger)numerator, (BigInteger)denominator);
+            (this.Numerator, this.Denominator) = new Fraction((BigInteger)numerator, (BigInteger)denominator);
             // if (denominator == 0) throw new DivideByZeroException("Denominator cannot be 0");
             // BigInteger value = MathUtils.factorize(numerator, (BigInteger)denominator);
             // this.numerator = numerator / value;
@@ -39,7 +39,7 @@ namespace math_parser.math
 
         public Fraction(long numerator, BigInteger denominator)
         {
-            (this.numerator, this.denominator) = new Fraction(numerator, (BigInteger)denominator);
+            (this.Numerator, this.Denominator) = new Fraction(numerator, (BigInteger)denominator);
             // if (denominator == 0) throw new DivideByZeroException("Denominator cannot be 0");
             // BigInteger value = MathUtils.factorize((BigInteger)numerator, denominator);
             // this.numerator = numerator / value;
@@ -48,14 +48,14 @@ namespace math_parser.math
 
         public Fraction(BigInteger value)
         {
-            numerator = value;
-            denominator = 1;
+            Numerator = value;
+            Denominator = 1;
         }
 
         public Fraction(long value)
         {
-            numerator = value;
-            denominator = 1;
+            Numerator = value;
+            Denominator = 1;
         }
 
         public Fraction(double value)
@@ -85,27 +85,27 @@ namespace math_parser.math
                 }
                 it += 1;
             }
-            (this.numerator, this.denominator) = new Fraction(numerator, denominator);
+            (this.Numerator, this.Denominator) = new Fraction(numerator, denominator);
         }
 
         public Fraction(string value)
         {
             Fraction f = Fraction.Parse(value);
-            denominator = f.denominator;
-            numerator = f.numerator;
+            Denominator = f.Denominator;
+            Numerator = f.Numerator;
         }
 
         public static implicit operator double(Fraction fraction)
         {
-            return (double)fraction.numerator / (double)fraction.denominator;
+            return (double)fraction.Numerator / (double)fraction.Denominator;
         }
 
         public static implicit operator float(Fraction fraction)
         {
-            return (float)((double)fraction.numerator / (double)fraction.denominator);
+            return (float)((double)fraction.Numerator / (double)fraction.Denominator);
         }
 
-        public static implicit operator (BigInteger numerator, BigInteger denominator)(Fraction fraction) => fraction.asTuple();
+        public static implicit operator (BigInteger numerator, BigInteger denominator)(Fraction fraction) => fraction.AsTuple();
 
         public static implicit operator Fraction(uint value) => new Fraction((long)value);
         // Operator conversion precedence fix for the compiler, with AI advise used, fixed SplitHandler.Update (totalFrac > 1 || i == totalPrioityTier - 1)
@@ -117,61 +117,61 @@ namespace math_parser.math
 
         public void Deconstruct(out BigInteger numerator, out BigInteger denominator)
         {
-            numerator = this.numerator;
-            denominator = this.denominator;
+            numerator = this.Numerator;
+            denominator = this.Denominator;
         }
 
         public Fraction Simplify()
         {
 
-            BigInteger value = MathUtils.factorize(numerator, denominator);
-            if (numerator < 0 && denominator < 0)
+            BigInteger value = MathUtils.Factorize(Numerator, Denominator);
+            if (Numerator < 0 && Denominator < 0)
             {
                 value *= -1;
             }
-            return new Fraction(numerator / value, denominator / value);
+            return new Fraction(Numerator / value, Denominator / value);
         }
 
         public Fraction Add(Fraction other)
         {
             // 3/4 + 5/8 = (3*8+5*4)/8*4, = 44/32 = 11/8
-            BigInteger v1 = MathUtils.factorize(this.denominator, other.denominator);
-            BigInteger denominator = this.denominator / v1 * other.denominator;
-            BigInteger leftNum = denominator / this.denominator * this.numerator;
-            BigInteger rightNum = denominator / other.denominator * other.numerator;
+            BigInteger v1 = MathUtils.Factorize(this.Denominator, other.Denominator);
+            BigInteger denominator = this.Denominator / v1 * other.Denominator;
+            BigInteger leftNum = denominator / this.Denominator * this.Numerator;
+            BigInteger rightNum = denominator / other.Denominator * other.Numerator;
             BigInteger numerator = leftNum + rightNum;
             return new Fraction(numerator, denominator);
         }
 
-        public Fraction asOpposeSign()
+        public Fraction AsOpposeSign()
         {
             // Overflow safe
-            if (denominator == long.MinValue && numerator == long.MinValue)
+            if (Denominator == long.MinValue && Numerator == long.MinValue)
                 return new Fraction(1, 1);
-            else if (denominator == long.MinValue)
-                return new Fraction(numerator, -denominator);
-            return new Fraction(-numerator, denominator);
+            else if (Denominator == long.MinValue)
+                return new Fraction(Numerator, -Denominator);
+            return new Fraction(-Numerator, Denominator);
         }
 
         public Fraction Invert()
         {
             // Overflow safe
-            return new Fraction(denominator, numerator);
+            return new Fraction(Denominator, Numerator);
         }
 
         public Fraction Subtract(Fraction other)
         {
-            return Add(other.asOpposeSign());
+            return Add(other.AsOpposeSign());
         }
 
         public Fraction Multiply(Fraction other)
         {
-            BigInteger v1 = MathUtils.factorize(this.numerator, other.denominator);
-            BigInteger v2 = MathUtils.factorize(other.numerator, this.denominator);
-            Fraction left = new Fraction(this.numerator / v1, this.denominator / v2);
-            Fraction right = new Fraction(other.numerator / v2, other.denominator / v1);
-            BigInteger numerator = left.numerator * right.numerator;
-            BigInteger denominator = left.denominator * right.denominator;
+            BigInteger v1 = MathUtils.Factorize(this.Numerator, other.Denominator);
+            BigInteger v2 = MathUtils.Factorize(other.Numerator, this.Denominator);
+            Fraction left = new Fraction(this.Numerator / v1, this.Denominator / v2);
+            Fraction right = new Fraction(other.Numerator / v2, other.Denominator / v1);
+            BigInteger numerator = left.Numerator * right.Numerator;
+            BigInteger denominator = left.Denominator * right.Denominator;
             return new Fraction(numerator, denominator);
         }
 
@@ -180,25 +180,25 @@ namespace math_parser.math
             return Multiply(other.Invert());
         }
 
-        public bool isBigInteger()
+        public bool IsBigInteger()
         {
-            BigInteger v1 = MathUtils.factorize(numerator, denominator);
-            return denominator == v1 || denominator == -v1 || numerator == 0;
+            BigInteger v1 = MathUtils.Factorize(Numerator, Denominator);
+            return Denominator == v1 || Denominator == -v1 || Numerator == 0;
         }
 
         public bool TryBigInteger(out BigInteger value)
         {
             value = 0;
-            if (!isBigInteger())
+            if (!IsBigInteger())
                 return false;
-            BigInteger v1 = MathUtils.factorize(numerator, denominator);
-            BigInteger num = numerator / v1;
-            BigInteger deno = denominator / v1;
+            BigInteger v1 = MathUtils.Factorize(Numerator, Denominator);
+            BigInteger num = Numerator / v1;
+            BigInteger deno = Denominator / v1;
             value = num * deno; // deno for sign
             return true;
         }
 
-        public bool isLong()
+        public bool IsLong()
         {
             bool stats = TryBigInteger(out BigInteger value);
             if (!stats)
@@ -209,14 +209,14 @@ namespace math_parser.math
         public bool TryLong(out long value)
         {
             value = 0;
-            if (!isLong())
+            if (!IsLong())
                 return false;
             TryBigInteger(out BigInteger v1);
             value = (long)v1;
             return true;
         }
 
-        public bool isInteger()
+        public bool IsInteger()
         {
             bool stats = TryBigInteger(out BigInteger value);
             if (!stats)
@@ -227,7 +227,7 @@ namespace math_parser.math
         public bool TryInt(out int value)
         {
             value = 0;
-            if (!isInteger())
+            if (!IsInteger())
                 return false;
             TryBigInteger(out BigInteger v1);
             value = (int)v1;
@@ -236,7 +236,7 @@ namespace math_parser.math
 
         public BigInteger GetFloor()
         {
-            return numerator / denominator;
+            return Numerator / Denominator;
         }
 
         public static Fraction operator +(Fraction left, Fraction right) => left.Add(right);
@@ -246,7 +246,7 @@ namespace math_parser.math
         public static Fraction operator -(Fraction left, Fraction right) => left.Subtract(right);
         public static Fraction operator -(Fraction left, long right) => left - new Fraction(right);
         public static Fraction operator -(long left, Fraction right) => new Fraction(left) - right;
-        public static Fraction operator -(Fraction right) => right.asOpposeSign();
+        public static Fraction operator -(Fraction right) => right.AsOpposeSign();
         public static Fraction operator *(Fraction left, Fraction right) => left.Multiply(right);
         public static Fraction operator *(Fraction left, long right) => left * new Fraction(right);
         public static Fraction operator *(long left, Fraction right) => new Fraction(left) * right;
@@ -259,11 +259,11 @@ namespace math_parser.math
             // if (right is null) return false;
             Fraction simLeft = left.Simplify();
             Fraction simRight = right.Simplify();
-            return simLeft.numerator == simRight.numerator && simLeft.denominator == simRight.denominator;
+            return simLeft.Numerator == simRight.Numerator && simLeft.Denominator == simRight.Denominator;
         }
 
         public static bool operator !=(Fraction left, Fraction right) => !(left == right);
-        public static bool operator <(Fraction left, Fraction right) => left.numerator * right.denominator < right.numerator * left.denominator;
+        public static bool operator <(Fraction left, Fraction right) => left.Numerator * right.Denominator < right.Numerator * left.Denominator;
         public static bool operator <=(Fraction left, Fraction right) => left < right || left == right;
         public static bool operator >(Fraction left, Fraction right) => !(left <= right);
         public static bool operator >=(Fraction left, Fraction right) => !(left < right);
@@ -277,10 +277,10 @@ namespace math_parser.math
         public override int GetHashCode()
         {
             int v = 2147483647;
-            int c1 = (int)(numerator / v % v);
-            int c2 = (int)(numerator % v);
-            int c3 = (int)(denominator / v % v);
-            int c4 = (int)(denominator % v);
+            int c1 = (int)(Numerator / v % v);
+            int c2 = (int)(Numerator % v);
+            int c3 = (int)(Denominator / v % v);
+            int c4 = (int)(Denominator % v);
             return c1 ^ c2 ^ c3 ^ c4;
         }
 
@@ -302,11 +302,11 @@ namespace math_parser.math
 
         public override string ToString()
         {
-            if (denominator == 1)
+            if (Denominator == 1)
             {
-                return $"{numerator.ToString()}";
+                return $"{Numerator.ToString()}";
             }
-            return $"{numerator.ToString()}/{denominator.ToString()}";
+            return $"{Numerator.ToString()}/{Denominator.ToString()}";
         }
 
         public static Fraction Parse(string value)
@@ -322,9 +322,9 @@ namespace math_parser.math
             return true;
         }
 
-        public (BigInteger numerator, BigInteger denominator) asTuple() => (numerator, denominator);
+        public (BigInteger numerator, BigInteger denominator) AsTuple() => (Numerator, Denominator);
 
-        public string AsLatex() => denominator != 1 ? $"$\\frac{{{numerator}}}{{{denominator}}}$" : $"${numerator}$";
+        public string AsLatex() => Denominator != 1 ? $"$\\frac{{{Numerator}}}{{{Denominator}}}$" : $"${Numerator}$";
 
         public Fraction Abs() => this >= 0 ? this : -this;
 
@@ -334,8 +334,8 @@ namespace math_parser.math
             {
                 throw new InvalidOperationException("Cannot have negative amount of significant figure");
             }
-            bool have_initial = this.Abs() >= 1;
-            BigInteger integer = numerator / denominator;
+            bool haveInitial = this.Abs() >= 1;
+            BigInteger integer = Numerator / Denominator;
             if (this < 0)
             {
                 integer--;
@@ -349,39 +349,39 @@ namespace math_parser.math
             {
                 if (remaining.Abs() > new Fraction(1, 2))
                 {
-                    integer += remaining.numerator * 2 / remaining.denominator;
+                    integer += remaining.Numerator * 2 / remaining.Denominator;
                 }
                 return (integer, 0, 0);
             }
             amount -= integer.Abs().ToString().Length - 2;
-            BigInteger length_0 = -1;
+            BigInteger length0 = -1;
             while (remaining < 1 && remaining != 0)
             {
-                length_0++;
+                length0++;
                 remaining *= 10;
-                if (have_initial)
+                if (haveInitial)
                 {
                     amount--;
                 }
                 if (amount < 0)
                 {
-                    return (integer, length_0, 0);
+                    return (integer, length0, 0);
                 }
             }
-            BigInteger left_over = 0;
+            BigInteger leftOver = 0;
             while (amount >= 0)
             {
-                left_over = left_over * 10;
+                leftOver = leftOver * 10;
                 if (remaining > 1)
                 {
-                    BigInteger curr = remaining.numerator / remaining.denominator;
+                    BigInteger curr = remaining.Numerator / remaining.Denominator;
                     remaining -= curr;
-                    left_over += curr;
+                    leftOver += curr;
                 }
                 remaining *= 10;
                 amount--;
             }
-            return (integer, length_0, left_over);
+            return (integer, length0, leftOver);
         }
 
         public (BigInteger integer, BigInteger length_0, BigInteger remaining) RepresentDp(BigInteger amount)
@@ -390,7 +390,7 @@ namespace math_parser.math
             {
                 throw new InvalidOperationException("Cannot have negative amount of significant figure");
             }
-            BigInteger integer = numerator / denominator;
+            BigInteger integer = Numerator / Denominator;
             if (this < 0)
             {
                 integer--;
@@ -404,35 +404,35 @@ namespace math_parser.math
             {
                 if (remaining.Abs() > new Fraction(1, 2))
                 {
-                    integer += remaining.numerator * 2 / remaining.denominator;
+                    integer += remaining.Numerator * 2 / remaining.Denominator;
                 }
                 return (integer, 0, 0);
             }
-            BigInteger length_0 = -1;
+            BigInteger length0 = -1;
             while (remaining < 1)
             {
-                length_0++;
+                length0++;
                 remaining *= 10;
                 amount--;
                 if (amount < 0)
                 {
-                    return (integer, length_0, 0);
+                    return (integer, length0, 0);
                 }
             }
-            BigInteger left_over = 0;
+            BigInteger leftOver = 0;
             while (amount >= 0)
             {
-                left_over = left_over * 10;
+                leftOver = leftOver * 10;
                 if (remaining > 1)
                 {
-                    BigInteger curr = remaining.numerator / remaining.denominator;
+                    BigInteger curr = remaining.Numerator / remaining.Denominator;
                     remaining -= curr;
-                    left_over += curr;
+                    leftOver += curr;
                 }
                 remaining *= 10;
                 amount--;
             }
-            return (integer, length_0, left_over);
+            return (integer, length0, leftOver);
         }
 
         public string ReprString(int length = 17)
@@ -493,10 +493,10 @@ namespace math_parser.math
             }
             else
             {
-                bool is_neg = value.integer < 0;
+                bool isNeg = value.integer < 0;
                 string content = value.integer.Abs().ToString();
                 BigInteger pow = value.integer.Abs().ToString().Length - 1;
-                builder.Append(is_neg ? "-" : "");
+                builder.Append(isNeg ? "-" : "");
                 builder.Append(content[0]);
                 if (content.Length > 1)
                 {

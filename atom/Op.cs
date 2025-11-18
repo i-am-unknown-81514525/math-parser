@@ -3,10 +3,10 @@ namespace math_parser.atom
     public interface SymbolAtom : Atom { }
     public class ArithematicSymbolAtom : SymbolAtom
     {
-        public readonly string literal;
+        public readonly string Literal;
         private ArithematicSymbolAtom(string v)
         {
-            literal = v;
+            Literal = v;
         }
 
         public static readonly ArithematicSymbolAtom Add = new ArithematicSymbolAtom("+");
@@ -18,10 +18,10 @@ namespace math_parser.atom
 
     public class ComparsionSymbolAtom : SymbolAtom
     {
-        public readonly string literal;
+        public readonly string Literal;
         private ComparsionSymbolAtom(string v)
         {
-            literal = v;
+            Literal = v;
         }
 
         public static readonly ComparsionSymbolAtom Eq = new ComparsionSymbolAtom("=");

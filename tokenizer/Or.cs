@@ -3,13 +3,13 @@ using System.Linq;
 
 namespace math_parser.tokenizer
 {
-    public class Or<S> : Token<S> where S : ParseResult
+    public class Or<TS> : Token<TS> where TS : ParseResult
     {
-        IToken<S>[] options;
+        IToken<TS>[] _options;
 
-        public Or(params IToken<S>[] options)
+        public Or(params IToken<TS>[] options)
         {
-            this.options = options.ToArray();
+            this._options = options.ToArray();
         }
 
         public override bool CanParse(CharacterStream stream)
@@ -38,15 +38,15 @@ namespace math_parser.tokenizer
             }
         }
 
-        public override S Parse(CharacterStream stream)
+        public override TS Parse(CharacterStream stream)
         {
             List<string> expected = new List<string>();
-            foreach (IToken<S> option in options)
+            foreach (IToken<TS> option in _options)
             {
                 CharacterStream inner = stream.Clone();
                 try
                 {
-                    S v = option.Parse(inner);
+                    TS v = option.Parse(inner);
                     stream.JumpForwardTo(inner);
                     return v;
                 }
@@ -61,7 +61,7 @@ namespace math_parser.tokenizer
         public override CharacterStream PartialParse(CharacterStream stream)
         {
             List<string> expected = new List<string>();
-            foreach (IToken<S> option in options)
+            foreach (IToken<TS> option in _options)
             {
                 CharacterStream inner = stream.Clone();
                 try

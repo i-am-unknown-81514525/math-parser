@@ -1,44 +1,44 @@
 namespace math_parser.ast
 {
-    public abstract class ASTOpNode2<T> : IASTNode<T>
+    public abstract class AstOpNode2<T> : IastNode<T>
     {
-        protected readonly IASTNode<T> left;
-        protected readonly IASTNode<T> right;
+        protected readonly IastNode<T> Left;
+        protected readonly IastNode<T> Right;
 
-        public ASTOpNode2(IASTNode<T> left, IASTNode<T> right)
+        public AstOpNode2(IastNode<T> left, IastNode<T> right)
         {
-            this.left = left;
-            this.right = right;
+            this.Left = left;
+            this.Right = right;
         }
 
         public abstract T Calc();
     }
 
-    public abstract class ASTOpNode2<T, O> : IASTNode<O>
+    public abstract class AstOpNode2<T, TO> : IastNode<TO>
     {
-        public readonly IASTNode<T> left;
-        public readonly IASTNode<T> right;
+        public readonly IastNode<T> Left;
+        public readonly IastNode<T> Right;
 
-        public ASTOpNode2(IASTNode<T> left, IASTNode<T> right)
+        public AstOpNode2(IastNode<T> left, IastNode<T> right)
         {
-            this.left = left;
-            this.right = right;
+            this.Left = left;
+            this.Right = right;
         }
 
-        public abstract O Calc();
+        public abstract TO Calc();
     }
 
-    public abstract class ASTOpNode2<L, R, O> : IASTNode<O>
+    public abstract class AstOpNode2<TL, TR, TO> : IastNode<TO>
     {
-        protected readonly IASTNode<L> left;
-        protected readonly IASTNode<R> right;
+        protected readonly IastNode<TL> Left;
+        protected readonly IastNode<TR> Right;
 
-        public ASTOpNode2(IASTNode<L> left, IASTNode<R> right)
+        public AstOpNode2(IastNode<TL> left, IastNode<TR> right)
         {
-            this.left = left;
-            this.right = right;
+            this.Left = left;
+            this.Right = right;
         }
 
-        public abstract O Calc();
+        public abstract TO Calc();
     }
 }

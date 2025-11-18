@@ -7,9 +7,9 @@ namespace math_parser.tokenizer
 
     public class NumberResult : MathAtomResult
     {
-        public readonly BigInteger integerPart;
-        public readonly BigInteger decimalMantissa;
-        public readonly BigInteger decimalExponent;
+        public readonly BigInteger IntegerPart;
+        public readonly BigInteger DecimalMantissa;
+        public readonly BigInteger DecimalExponent;
         // ^ should be <= 0 and normalised (i.e. if it end with 0 in decimalMantissa, decimalExponent increase by one)
         // It would be like (integerPart + (10**decimalExponent)*("0."decimalMantissa))
 
@@ -33,14 +33,14 @@ namespace math_parser.tokenizer
                 decimalMantissa /= 10;
                 decimalExponent++; // Closer to 0, I am not doing something wrong since it is originally negative
             }
-            this.integerPart = integerPart;
-            this.decimalMantissa = decimalMantissa;
-            this.decimalExponent = decimalExponent;
+            this.IntegerPart = integerPart;
+            this.DecimalMantissa = decimalMantissa;
+            this.DecimalExponent = decimalExponent;
         }
 
         public Fraction AsFraction()
         {
-            return new Fraction(integerPart * MathUtils.Pow(10, -decimalExponent) + decimalMantissa, MathUtils.Pow(10, -decimalExponent));
+            return new Fraction(IntegerPart * MathUtils.Pow(10, -DecimalExponent) + DecimalMantissa, MathUtils.Pow(10, -DecimalExponent));
         }
 
         public override string ToString() => ToString(0);
@@ -138,7 +138,7 @@ namespace math_parser.tokenizer
         public override NumberResult Parse(CharacterStream stream)
         {
             CharacterStream before = stream.Clone();
-            inner_token.Parse(stream);
+            InnerToken.Parse(stream);
             string content = before.TakeTo(stream);
             if (content.Contains("."))
             {
@@ -149,10 +149,10 @@ namespace math_parser.tokenizer
                 }
                 string left = all[0];
                 string right = all[1];
-                int r_length = right.Length;
+                int rLength = right.Length;
                 BigInteger integerPart = BigInteger.Parse(left);
                 BigInteger mantissa = BigInteger.Parse(right.TrimStart('0'));
-                BigInteger exponent = new BigInteger(-r_length);
+                BigInteger exponent = new BigInteger(-rLength);
                 return new NumberResult(integerPart, mantissa, exponent);
             }
             return new NumberResult(BigInteger.Parse(content), 0, 0);

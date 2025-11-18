@@ -16,7 +16,7 @@ namespace math_parser.tokenizer
         public override SyntaxDiscardResult Parse(CharacterStream stream)
         {
             CharacterStream cp = stream.Fork();
-            inner_token.Parse(cp);
+            InnerToken.Parse(cp);
             return new SyntaxDiscardResult(stream.TakeTo(cp));
         }
     }
@@ -39,7 +39,7 @@ namespace math_parser.tokenizer
         public override SyntaxDiscardResult Parse(CharacterStream stream)
         {
             CharacterStream cp = stream.Fork();
-            inner_token.Parse(cp);
+            InnerToken.Parse(cp);
             return new SyntaxDiscardResult(stream.TakeTo(cp));
         }
     }
@@ -49,7 +49,7 @@ namespace math_parser.tokenizer
         public MathPotentialSpace() : base(new PotentialSpace()) { }
         public override MathLiteralResult Parse(CharacterStream stream)
         {
-            return new MathLiteralResult(inner_token.Parse(stream).content);
+            return new MathLiteralResult(InnerToken.Parse(stream).Content);
         }
     }
 
@@ -58,7 +58,7 @@ namespace math_parser.tokenizer
         public MathPotentialLine() : base(new PotentialNewLine()) { }
         public override MathLiteralResult Parse(CharacterStream stream)
         {
-            return new MathLiteralResult(inner_token.Parse(stream).content);
+            return new MathLiteralResult(InnerToken.Parse(stream).Content);
         }
     }
 }

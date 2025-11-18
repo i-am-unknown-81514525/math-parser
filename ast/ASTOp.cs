@@ -1,86 +1,86 @@
 namespace math_parser.ast
 {
-    public class ASTAdd<L, R, O> : ASTOpNode2<L, R, O> where L : IAdd<R, O>
+    public class AstAdd<TL, TR, TO> : AstOpNode2<TL, TR, TO> where TL : IAdd<TR, TO>
     {
-        public ASTAdd(IASTNode<L> left, IASTNode<R> right) : base(left, right) { }
+        public AstAdd(IastNode<TL> left, IastNode<TR> right) : base(left, right) { }
 
-        public override O Calc() => left.Calc().Add(right.Calc());
+        public override TO Calc() => Left.Calc().Add(Right.Calc());
     }
 
-    public class ASTAdd<I, O> : ASTOpNode2<I, O> where I : IAdd<I, O>
+    public class AstAdd<TI, TO> : AstOpNode2<TI, TO> where TI : IAdd<TI, TO>
     {
-        public ASTAdd(IASTNode<I> left, IASTNode<I> right) : base(left, right) { }
+        public AstAdd(IastNode<TI> left, IastNode<TI> right) : base(left, right) { }
 
-        public override O Calc() => left.Calc().Add(right.Calc());
+        public override TO Calc() => Left.Calc().Add(Right.Calc());
     } 
 
-    public class ASTAdd<T> : ASTOpNode2<T> where T : IAdd<T, T>
+    public class AstAdd<T> : AstOpNode2<T> where T : IAdd<T, T>
     {
-        public ASTAdd(IASTNode<T> left, IASTNode<T> right) : base(left, right) { }
+        public AstAdd(IastNode<T> left, IastNode<T> right) : base(left, right) { }
 
-        public override T Calc() => left.Calc().Add(right.Calc());
+        public override T Calc() => Left.Calc().Add(Right.Calc());
     } 
 
-    public class ASTSub<L, R, O> : ASTOpNode2<L, R, O> where L : ISub<R, O>
+    public class AstSub<TL, TR, TO> : AstOpNode2<TL, TR, TO> where TL : ISub<TR, TO>
     {
-        public ASTSub(IASTNode<L> left, IASTNode<R> right) : base(left, right) { }
+        public AstSub(IastNode<TL> left, IastNode<TR> right) : base(left, right) { }
 
-        public override O Calc() => left.Calc().Sub(right.Calc());
+        public override TO Calc() => Left.Calc().Sub(Right.Calc());
     }
 
-    public class ASTSub<I, O> : ASTOpNode2<I, O> where I : ISub<I, O>
+    public class AstSub<TI, TO> : AstOpNode2<TI, TO> where TI : ISub<TI, TO>
     {
-        public ASTSub(IASTNode<I> left, IASTNode<I> right) : base(left, right) { }
+        public AstSub(IastNode<TI> left, IastNode<TI> right) : base(left, right) { }
 
-        public override O Calc() => left.Calc().Sub(right.Calc());
+        public override TO Calc() => Left.Calc().Sub(Right.Calc());
     }
 
-    public class ASTSub<T> : ASTOpNode2<T> where T : ISub<T, T>
+    public class AstSub<T> : AstOpNode2<T> where T : ISub<T, T>
     {
-        public ASTSub(IASTNode<T> left, IASTNode<T> right) : base(left, right) { }
+        public AstSub(IastNode<T> left, IastNode<T> right) : base(left, right) { }
 
-        public override T Calc() => left.Calc().Sub(right.Calc());
+        public override T Calc() => Left.Calc().Sub(Right.Calc());
     } 
 
-    public class ASTMul<L, R, O> : ASTOpNode2<L, R, O> where L : IMul<R, O>
+    public class AstMul<TL, TR, TO> : AstOpNode2<TL, TR, TO> where TL : IMul<TR, TO>
     {
-        public ASTMul(IASTNode<L> left, IASTNode<R> right) : base(left, right) { }
+        public AstMul(IastNode<TL> left, IastNode<TR> right) : base(left, right) { }
 
-        public override O Calc() => left.Calc().Mul(right.Calc());
+        public override TO Calc() => Left.Calc().Mul(Right.Calc());
     }
 
-    public class ASTMul<I, O> : ASTOpNode2<I, O> where I : IMul<I, O>
+    public class AstMul<TI, TO> : AstOpNode2<TI, TO> where TI : IMul<TI, TO>
     {
-        public ASTMul(IASTNode<I> left, IASTNode<I> right) : base(left, right) { }
+        public AstMul(IastNode<TI> left, IastNode<TI> right) : base(left, right) { }
 
-        public override O Calc() => left.Calc().Mul(right.Calc());
+        public override TO Calc() => Left.Calc().Mul(Right.Calc());
     }
 
-    public class ASTMul<T> : ASTOpNode2<T> where T : IMul<T, T>
+    public class AstMul<T> : AstOpNode2<T> where T : IMul<T, T>
     {
-        public ASTMul(IASTNode<T> left, IASTNode<T> right) : base(left, right) { }
+        public AstMul(IastNode<T> left, IastNode<T> right) : base(left, right) { }
 
-        public override T Calc() => left.Calc().Mul(right.Calc());
+        public override T Calc() => Left.Calc().Mul(Right.Calc());
     } 
 
-    public class ASTDiv<L, R, O> : ASTOpNode2<L, R, O> where L : IDiv<R, O>
+    public class AstDiv<TL, TR, TO> : AstOpNode2<TL, TR, TO> where TL : IDiv<TR, TO>
     {
-        public ASTDiv(IASTNode<L> left, IASTNode<R> right) : base(left, right) { }
+        public AstDiv(IastNode<TL> left, IastNode<TR> right) : base(left, right) { }
 
-        public override O Calc() => left.Calc().Div(right.Calc());
+        public override TO Calc() => Left.Calc().Div(Right.Calc());
     }
 
-    public class ASTDiv<I, O> : ASTOpNode2<I, O> where I : IDiv<I, O>
+    public class AstDiv<TI, TO> : AstOpNode2<TI, TO> where TI : IDiv<TI, TO>
     {
-        public ASTDiv(IASTNode<I> left, IASTNode<I> right) : base(left, right) { }
+        public AstDiv(IastNode<TI> left, IastNode<TI> right) : base(left, right) { }
 
-        public override O Calc() => left.Calc().Div(right.Calc());
+        public override TO Calc() => Left.Calc().Div(Right.Calc());
     } 
 
-    public class ASTDiv<T> : ASTOpNode2<T> where T : IDiv<T, T>
+    public class AstDiv<T> : AstOpNode2<T> where T : IDiv<T, T>
     {
-        public ASTDiv(IASTNode<T> left, IASTNode<T> right) : base(left, right) { }
+        public AstDiv(IastNode<T> left, IastNode<T> right) : base(left, right) { }
 
-        public override T Calc() => left.Calc().Div(right.Calc());
+        public override T Calc() => Left.Calc().Div(Right.Calc());
     }
 }

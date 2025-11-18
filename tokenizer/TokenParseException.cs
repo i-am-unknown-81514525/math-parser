@@ -6,10 +6,10 @@ namespace math_parser.tokenizer
 {
     public class TokenParseException : Exception
     {
-        public readonly string reason;
-        public readonly int ptr;
-        public readonly string next;
-        private List<string> expectedTokens = new List<string>();
+        public readonly string Reason;
+        public readonly int Ptr;
+        public readonly string Next;
+        private List<string> _expectedTokens = new List<string>();
         public TokenParseException(
             string reason, 
             int ptr, 
@@ -17,26 +17,26 @@ namespace math_parser.tokenizer
             string next = "N/A"
         ) : base($"{reason} at pointer {ptr}, Expected [{string.Join(", ", expected).Replace("\n", "\\n").Replace("\r", "\\r")}], Procedding stream: {next.Replace("\n", "\\n").Replace("\r", "\\r")}")
         {
-            this.expectedTokens = expected.ToList();
-            this.reason = reason;
-            this.ptr = ptr;
-            this.next = next;
+            this._expectedTokens = expected.ToList();
+            this.Reason = reason;
+            this.Ptr = ptr;
+            this.Next = next;
         }
 
         public string[] GetExpectedTokens()
         {
-            return expectedTokens.ToArray();
+            return _expectedTokens.ToArray();
         }
 
         public virtual TokenParseException AddExpectedTokens(params string[] tokens)
         {
-            List<string> expectedTokens = this.expectedTokens.ToList();
+            List<string> expectedTokens = this._expectedTokens.ToList();
             expectedTokens.AddRange(tokens);
             return new TokenParseException(
-                reason, 
-                ptr, 
+                Reason, 
+                Ptr, 
                 expectedTokens.ToList(),
-                next
+                Next
             );
         }
     }
@@ -50,10 +50,10 @@ namespace math_parser.tokenizer
             List<string> expectedTokens = GetExpectedTokens().ToList();
             expectedTokens.AddRange(tokens);
             return new TokenParseBacktrackException(
-                reason, 
-                ptr, 
+                Reason, 
+                Ptr, 
                 expectedTokens.ToList(),
-                next
+                Next
             );
         }
     }
@@ -72,10 +72,10 @@ namespace math_parser.tokenizer
             List<string> expectedTokens = GetExpectedTokens().ToList();
             expectedTokens.AddRange(tokens);
             return new TokenParseNoBacktrackException(
-                reason, 
-                ptr, 
+                Reason, 
+                Ptr, 
                 expectedTokens.ToList(),
-                next
+                Next
             );
         }
     }

@@ -6,13 +6,13 @@ namespace math_parser.tokenizer
 {
     public class EqResult : ParseResult
     {
-        public readonly ExprResult exprs;
-        public readonly atom.ComparsionSymbolAtom comparsionAtom;
+        public readonly ExprResult Exprs;
+        public readonly atom.ComparsionSymbolAtom ComparsionAtom;
 
         public EqResult(ExprResult result, atom.ComparsionSymbolAtom atom)
         {
-            this.exprs = result;
-            this.comparsionAtom = atom;
+            this.Exprs = result;
+            this.ComparsionAtom = atom;
         }
 
         public override string ToString() => ToString(0);
@@ -20,16 +20,16 @@ namespace math_parser.tokenizer
         {
             var sb = new StringBuilder();
             sb.AppendLine($"{ParseResultExtensions.Indent(indent)}EqResult:");
-            sb.AppendLine($"{ParseResultExtensions.Indent(indent + 1)}Comparison: {comparsionAtom.literal}");
+            sb.AppendLine($"{ParseResultExtensions.Indent(indent + 1)}Comparison: {ComparsionAtom.Literal}");
             sb.AppendLine($"{ParseResultExtensions.Indent(indent + 1)}Expression (LHS - RHS):");
-            sb.Append(exprs.ToString(indent + 2));
+            sb.Append(Exprs.ToString(indent + 2));
             return sb.ToString();
         }
     }
 
     public class Equation : Group<TokenSequenceResult<ParseResult>, EqResult>
     {
-        public static Dictionary<string, atom.ComparsionSymbolAtom> mapping = new Dictionary<string, atom.ComparsionSymbolAtom>()
+        public static Dictionary<string, atom.ComparsionSymbolAtom> Mapping = new Dictionary<string, atom.ComparsionSymbolAtom>()
         {
             {"=", atom.ComparsionSymbolAtom.Eq},
             {">=", atom.ComparsionSymbolAtom.Ge},
@@ -48,11 +48,11 @@ namespace math_parser.tokenizer
 
         public override EqResult Parse(CharacterStream stream)
         {
-            TokenSequenceResult<ParseResult> results = inner_token.Parse(stream);
-            ExprResult left = (ExprResult)results.parseResult[1];
-            ExprResult right = (ExprResult)results.parseResult[5];
-            MathLiteralResult mathLiteral = (MathLiteralResult)results.parseResult[3];
-            return new EqResult(left - right, mapping[mathLiteral.literal]);
+            TokenSequenceResult<ParseResult> results = InnerToken.Parse(stream);
+            ExprResult left = (ExprResult)results.ParseResult[1];
+            ExprResult right = (ExprResult)results.ParseResult[5];
+            MathLiteralResult mathLiteral = (MathLiteralResult)results.ParseResult[3];
+            return new EqResult(left - right, Mapping[mathLiteral.Literal]);
         }
     }
 }

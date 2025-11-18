@@ -5,23 +5,23 @@ namespace math_parser.tokenizer
 {
     public class CharacterStream : System.IEquatable<CharacterStream>
     {
-        public readonly SharedImmutableString _base;
+        public readonly SharedImmutableString Base;
         public int ptr { get; internal set; } = 0;
 
         public CharacterStream(SharedImmutableString str)
         {
-            this._base = str;
+            this.Base = str;
         }
 
         public CharacterStream(SharedImmutableString str, int ptr)
         {
-            this._base = str;
+            this.Base = str;
             this.ptr = ptr;
         }
 
         public char Peek()
         {
-            return _base[ptr];
+            return Base[ptr];
         }
 
         public void Advance()
@@ -39,12 +39,12 @@ namespace math_parser.tokenizer
         public string Peek(int amount)
         {
             if (amount == 0) return "";
-            return this._base.SubString(ptr, amount);
+            return this.Base.SubString(ptr, amount);
         }
 
         public string PeekAll()
         {
-            return this._base.SubString(ptr);
+            return this.Base.SubString(ptr);
         }
         
         public void Advance(int amount)
@@ -65,19 +65,19 @@ namespace math_parser.tokenizer
             {
                 return right is null;
             }
-            return left.ptr == right.ptr && object.ReferenceEquals(left._base, right._base); // fastcheck, require copy to use the same shared immutable string
+            return left.ptr == right.ptr && object.ReferenceEquals(left.Base, right.Base); // fastcheck, require copy to use the same shared immutable string
         }
 
         public static bool operator !=(CharacterStream left, CharacterStream right) => !(left == right);
 
         public CharacterStream Fork()
         {
-            return new CharacterStream(_base, ptr);
+            return new CharacterStream(Base, ptr);
         }
 
         public CharacterStream Clone()
         {
-            return new CharacterStream(_base, ptr);
+            return new CharacterStream(Base, ptr);
         }
 
         public bool Equals(CharacterStream other)
@@ -94,12 +94,12 @@ namespace math_parser.tokenizer
 
         public override int GetHashCode()
         {
-            return _base.GetHashCode() ^ ptr.GetHashCode();
+            return Base.GetHashCode() ^ ptr.GetHashCode();
         }
 
         public CharacterStream JumpForwardTo(CharacterStream src)
         {
-            if (!object.ReferenceEquals(src._base, this._base))
+            if (!object.ReferenceEquals(src.Base, this.Base))
             {
                 throw new InvalidOperationException("Not the same string");
             }
@@ -113,7 +113,7 @@ namespace math_parser.tokenizer
 
         public string TakeTo(CharacterStream src)
         {
-            if (!object.ReferenceEquals(src._base, this._base))
+            if (!object.ReferenceEquals(src.Base, this.Base))
             {
                 throw new InvalidOperationException("Not the same string");
             }
@@ -124,9 +124,9 @@ namespace math_parser.tokenizer
             return Take(src.ptr - ptr);
         }
         
-        public bool IsEof
+        public bool isEof
         {
-            get => ptr + 1 >= _base.Length;
+            get => ptr + 1 >= Base.length;
         }
 
         // public static implicit operator (SyntaxDiscardResult, CharacterStream)(CharacterStream stream) => (SyntaxDiscardResult.Empty, stream);

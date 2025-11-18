@@ -3,13 +3,13 @@ using System.Linq;
 
 namespace math_parser.tokenizer
 {
-    public class OrNoBacktrack<S> : Token<S> where S : ParseResult
+    public class OrNoBacktrack<TS> : Token<TS> where TS : ParseResult
     {
-        IToken<S>[] options;
+        IToken<TS>[] _options;
 
-        public OrNoBacktrack(params IToken<S>[] options)
+        public OrNoBacktrack(params IToken<TS>[] options)
         {
-            this.options = options.ToArray();
+            this._options = options.ToArray();
         }
 
         public override bool CanParse(CharacterStream stream)
@@ -25,29 +25,29 @@ namespace math_parser.tokenizer
             }
         }
 
-        public override S Parse(CharacterStream stream)
+        public override TS Parse(CharacterStream stream)
         {
-            List<string> global_expected = new List<string>();
-            for (int i = 0; i < options.Length; i++)
+            List<string> globalExpected = new List<string>();
+            for (int i = 0; i < _options.Length; i++)
             {
-                IToken<S> token = options[i];
+                IToken<TS> token = _options[i];
                 if (token.CanPartialParse(stream))
                 {
                     CharacterStream inner = stream.Fork();
                     try
                     {
-                        S result = token.Parse(inner);
+                        TS result = token.Parse(inner);
                         stream.JumpForwardTo(inner);
                         return result;
                     }
                     catch (TokenParseException e)
                     {
                         List<string> local = e.GetExpectedTokens().ToList();
-                        global_expected.AddRange(local);
+                        globalExpected.AddRange(local);
                         throw new TokenParseNoBacktrackException(
                             $"No valid path, Attempt path {i} which successfully partial parse but failed to be parsed entirely", 
                             stream.ptr, 
-                            global_expected, 
+                            globalExpected, 
                             stream.Peek(20)
                         );
                     }
@@ -59,11 +59,11 @@ namespace math_parser.tokenizer
                     }
                     catch (TokenParseException e)
                     {
-                        global_expected.AddRange(e.GetExpectedTokens());
+                        globalExpected.AddRange(e.GetExpectedTokens());
                     }
                 }
             }
-            throw new TokenParseBacktrackException("No valid path", stream.ptr, global_expected, stream.Peek(20)); // This is using backtrack instead of no backtrack as the essential identical path
+            throw new TokenParseBacktrackException("No valid path", stream.ptr, globalExpected, stream.Peek(20)); // This is using backtrack instead of no backtrack as the essential identical path
         }
 
         public override bool CanPartialParse(CharacterStream stream)
@@ -82,7 +82,7 @@ namespace math_parser.tokenizer
         public override CharacterStream PartialParse(CharacterStream stream)
         {
             List<string> expected = new List<string>();
-            foreach (IToken<S> option in options)
+            foreach (IToken<TS> option in _options)
             {
                 CharacterStream inner = stream.Clone();
                 try

@@ -10,19 +10,19 @@ namespace math_parser.tokenizer
         }
     }
 
-    public class Literal<S> : Token<S> where S : ParseResult
+    public class Literal<TS> : Token<TS> where TS : ParseResult
     {
-        public readonly string content;
+        public readonly string Content;
 
         public Literal(string value)
         {
             if (value is null) throw new NullReferenceException("Literal cannot be null");
-            this.content = value;
+            this.Content = value;
         }
 
-        public virtual S Constructor(string content)
+        public virtual TS Constructor(string content)
         {
-            if (!(new SyntaxDiscardResult(content) is S v))
+            if (!(new SyntaxDiscardResult(content) is TS v))
             {
                 throw new NullReferenceException("This is not SyntaxDiscardResult, you must override the constructor");
             }
@@ -31,35 +31,35 @@ namespace math_parser.tokenizer
 
         public override bool CanParse(CharacterStream stream)
         {
-            if (content.Length == 0) return true;
-            return stream.Peek(content.Length) == content;
+            if (Content.Length == 0) return true;
+            return stream.Peek(Content.Length) == Content;
         }
 
         public override bool CanPartialParse(CharacterStream stream)
         {
-            if (content.Length == 0) return true;
-            return stream.Peek() == content[0];
+            if (Content.Length == 0) return true;
+            return stream.Peek() == Content[0];
         }
 
-        public override S Parse(CharacterStream stream)
+        public override TS Parse(CharacterStream stream)
         {
-            if (content.Length == 0) return Constructor(content);
-            if (stream.Peek(content.Length) == content)
+            if (Content.Length == 0) return Constructor(Content);
+            if (stream.Peek(Content.Length) == Content)
             {
-                stream.Take(content.Length);
-                return Constructor(content);
+                stream.Take(Content.Length);
+                return Constructor(Content);
             }
-            throw new TokenParseBacktrackException($"Not valid path, expected literal {content}", stream.ptr, new List<string>() {$"\"{content}\""},stream.Peek(20));
+            throw new TokenParseBacktrackException($"Not valid path, expected literal {Content}", stream.ptr, new List<string>() {$"\"{Content}\""},stream.Peek(20));
         }
 
         public override CharacterStream PartialParse(CharacterStream stream)
         {
-            if (content.Length == 0) return stream;
-            if (stream.Take() == content[0])
+            if (Content.Length == 0) return stream;
+            if (stream.Take() == Content[0])
             {
                 return stream;
             }
-            throw new TokenParseBacktrackException($"Not valid path, expected literal {content}", stream.ptr, new List<string>() {$"\"{content[0]}\""},stream.Peek(20));
+            throw new TokenParseBacktrackException($"Not valid path, expected literal {Content}", stream.ptr, new List<string>() {$"\"{Content[0]}\""},stream.Peek(20));
         }
     }
 }

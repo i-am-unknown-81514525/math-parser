@@ -3,9 +3,9 @@ using math_parser.math;
 
 namespace math_parser.tokenizer
 {
-    public class Bracketed<S> : Group<TokenSequenceResult<ParseResult>, S> where S : ParseResult
+    public class Bracketed<TS> : Group<TokenSequenceResult<ParseResult>, TS> where TS : ParseResult
     {
-        public Bracketed(IToken<S> token) : base(
+        public Bracketed(IToken<TS> token) : base(
             new TokenSequence<ParseResult>(
                 new Literal("("),
                 (IToken<ParseResult>)token,
@@ -14,10 +14,10 @@ namespace math_parser.tokenizer
         )
         { }
 
-        public override S Parse(CharacterStream stream)
+        public override TS Parse(CharacterStream stream)
         {
-            var result = inner_token.Parse(stream);
-            return (S)result.parseResult[1];
+            var result = InnerToken.Parse(stream);
+            return (TS)result.ParseResult[1];
         }
     }
 }

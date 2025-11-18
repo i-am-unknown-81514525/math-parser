@@ -3,26 +3,26 @@ namespace math_parser.utils
 
     public sealed class SharedImmutableString
     {
-        private string content;
+        private string _content;
 
         public SharedImmutableString(string content)
         {
-            this.content = content;
+            this._content = content;
         }
 
         public char this[int idx]
         {
-            get => this.content[idx];
+            get => this._content[idx];
         }
 
         public SharedImmutableString(char c, int length)
         {
-            this.content = new string(c, length);
+            this._content = new string(c, length);
         }
 
-        public int Length
+        public int length
         {
-            get => this.content.Length;
+            get => this._content.Length;
         }
 
         public SharedImmutableString Clone()
@@ -41,28 +41,28 @@ namespace math_parser.utils
             {
                 return "";
             }
-            if (startIndex + 1 >= content.Length)
+            if (startIndex + 1 >= _content.Length)
             {
                 return "";
             }
-            if (startIndex + length >= content.Length)
+            if (startIndex + length >= _content.Length)
             {
-                length = content.Length - startIndex;
+                length = _content.Length - startIndex;
             }
-            return this.content.Substring(startIndex, length);
+            return this._content.Substring(startIndex, length);
         }
 
         public string SubString(int startIndex)
         {
-            if (startIndex + 1 >= content.Length)
+            if (startIndex + 1 >= _content.Length)
             {
                 return "";
             }
-            return this.content.Substring(startIndex);
+            return this._content.Substring(startIndex);
         }
 
         public string AsRaw() {
-            return this.content;
+            return this._content;
         }
     }
 }

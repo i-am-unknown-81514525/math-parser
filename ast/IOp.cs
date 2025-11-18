@@ -1,32 +1,32 @@
 namespace math_parser.ast
 {
-    public interface IAdd<I, O>
+    public interface IAdd<TI, TO>
     {
-        O Add(I right);
+        TO Add(TI right);
     }
 
-    public interface ISelfAdd<O>
+    public interface ISelfAdd<TO>
     {
-        O Add();
+        TO Add();
     }
 
-    public interface ISub<I, O>
+    public interface ISub<TI, TO>
     {
-        O Sub(I right);
+        TO Sub(TI right);
     }
 
-    public interface ISelfSub<O>
+    public interface ISelfSub<TO>
     {
-        O Sub();
+        TO Sub();
     }
 
-    public interface IMul<I, O>
+    public interface IMul<TI, TO>
     {
-        O Mul(I right);
+        TO Mul(TI right);
     }
 
-    public interface IDiv<I, O>
+    public interface IDiv<TI, TO>
     {
-        O Div(I right);
+        TO Div(TI right);
     }
 }

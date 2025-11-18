@@ -2,22 +2,22 @@ namespace math_parser.tokenizer
 {
     public class SyntaxDiscardResult : ParseResult
     {
-        public readonly string content;
+        public readonly string Content;
 
         public SyntaxDiscardResult(string inner)
         {
-            content = inner;
+            Content = inner;
         }
 
         public override string ToString() => ToString(0);
         public string ToString(int indent)
         {
-            if (string.IsNullOrWhiteSpace(content))
+            if (string.IsNullOrWhiteSpace(Content))
             {
                 return "";
             }
 
-            string displayContent = content.Replace("\n", "\\n");
+            string displayContent = Content.Replace("\n", "\\n");
             return $"{ParseResultExtensions.Indent(indent)}SyntaxDiscardResult: '{displayContent}'\n";
         }
     }

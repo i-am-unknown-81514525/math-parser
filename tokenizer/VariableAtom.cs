@@ -98,7 +98,7 @@ namespace math_parser.tokenizer
                 throw new TokenParseBacktrackException($"Not valid path while attempting to parse keyword", stream.ptr, new System.Collections.Generic.List<string> {"!Keyword"}, stream.Peek(20));
             }
             CharacterStream cp = stream.Fork();
-            inner_token.Parse(cp);
+            InnerToken.Parse(cp);
             string content = stream.TakeTo(cp);
             return new MathLiteralResult(content);
         }

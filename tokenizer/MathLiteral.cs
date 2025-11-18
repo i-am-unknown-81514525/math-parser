@@ -2,15 +2,15 @@ namespace math_parser.tokenizer
 {
     public class MathLiteralResult : MathAtomResult
     {
-        public readonly string literal;
+        public readonly string Literal;
 
         public MathLiteralResult(string literal)
         {
-            this.literal = literal;
+            this.Literal = literal;
         }
 
         public override string ToString() => ToString(0);
-        public virtual string ToString(int indent) => $"{ParseResultExtensions.Indent(indent)}MathLiteralResult: '{literal}'\n";
+        public virtual string ToString(int indent) => $"{ParseResultExtensions.Indent(indent)}MathLiteralResult: '{Literal}'\n";
     }
     public class MathLiteral : Literal<MathLiteralResult>
     {

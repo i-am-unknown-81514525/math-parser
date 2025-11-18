@@ -1,6 +1,6 @@
 namespace math_parser.ast
 {
-    public interface IASTNode<T>
+    public interface IastNode<T>
     {
         T Calc();
     }

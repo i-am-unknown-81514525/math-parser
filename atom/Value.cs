@@ -4,11 +4,11 @@ namespace math_parser.atom
 {
     public class Value : Atom
     {
-        public readonly ExprResult inner;
+        public readonly ExprResult Inner;
 
         public Value(ExprResult inner)
         {
-            this.inner = inner;
+            this.Inner = inner;
         }
     }
 }

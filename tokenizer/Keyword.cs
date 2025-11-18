@@ -4,17 +4,17 @@ namespace math_parser.tokenizer
 {
     public static class Keyword
     {
-        public static List<string> keywords = new List<string>();
+        public static List<string> Keywords = new List<string>();
 
         public static void PushKeyword(string keyword)
         {
-            if (keywords.Contains(keyword)) return;
-            keywords.Add(keyword);
+            if (Keywords.Contains(keyword)) return;
+            Keywords.Add(keyword);
         }
 
         public static bool IsStartWithKeyword(string contents)
         {
-            foreach (string keyword in keywords)
+            foreach (string keyword in Keywords)
             {
                 if (contents.StartsWith(keyword)) return true;
             }
@@ -23,7 +23,7 @@ namespace math_parser.tokenizer
 
         public static bool IsKeyword(string contents)
         {
-            return keywords.Contains(contents);
+            return Keywords.Contains(contents);
         }
     }
 }

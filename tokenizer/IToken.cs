@@ -37,13 +37,13 @@ namespace math_parser.tokenizer
         public abstract bool CanPartialParse(CharacterStream stream);
     }
     
-    public abstract class Token<S> : IToken<S> where S : ParseResult {
+    public abstract class Token<TS> : IToken<TS> where TS : ParseResult {
         (ParseResult, CharacterStream) IBaseToken.Parse(CharacterStream stream)
         {
             return (Parse(stream), stream);
         }
 
-        public abstract S Parse(CharacterStream stream);
+        public abstract TS Parse(CharacterStream stream);
         public abstract bool CanParse(CharacterStream stream);
         public abstract CharacterStream PartialParse(CharacterStream stream);
         public abstract bool CanPartialParse(CharacterStream stream);

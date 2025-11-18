@@ -12,13 +12,13 @@ namespace math_parser.tokenizer
 {
     public struct Term
     {
-        public readonly Fraction coefficient;
-        public readonly string term_name; // "" mean just the literal value, no algebra term
+        public readonly Fraction Coefficient;
+        public readonly string TermName; // "" mean just the literal value, no algebra term
 
-        public Term(Fraction coefficient, string term_name)
+        public Term(Fraction coefficient, string termName)
         {
-            this.coefficient = coefficient;
-            this.term_name = term_name;
+            this.Coefficient = coefficient;
+            this.TermName = termName;
         }
 
         public static implicit operator Term(Fraction v) => new Term(v, "");
@@ -27,28 +27,28 @@ namespace math_parser.tokenizer
 
     public class ExprResult : MathAtomResult, IAdd<ExprResult, ExprResult>, ISub<ExprResult, ExprResult>, ISelfAdd<ExprResult>, ISelfSub<ExprResult>, IMul<ExprResult, ExprResult>, IDiv<ExprResult, ExprResult>
     {
-        public readonly Term[] terms;
+        public readonly Term[] Terms;
 
         public ExprResult(Term[] terms)
         {
-            this.terms = terms.ToArray();
+            this.Terms = terms.ToArray();
         }
 
-        public bool isIntegerOnly() => terms.Where(x => x.term_name != "").Count() == 0;
+        public bool isIntegerOnly() => Terms.Where(x => x.TermName != "").Count() == 0;
 
         public static ExprResult operator +(ExprResult left, ExprResult right)
         {
-            List<Term> ret = left.terms.ToList();
-            foreach (Term term in right.terms)
+            List<Term> ret = left.Terms.ToList();
+            foreach (Term term in right.Terms)
             {
-                int idx = ret.Select(x => x.term_name).ToList().IndexOf(term.term_name);
+                int idx = ret.Select(x => x.TermName).ToList().IndexOf(term.TermName);
                 if (idx == -1)
                 {
                     ret.Add(term);
                 }
                 else
                 {
-                    ret[idx] = new Term(ret[idx].coefficient + term.coefficient, term.term_name);
+                    ret[idx] = new Term(ret[idx].Coefficient + term.Coefficient, term.TermName);
                 }
             }
             return new ExprResult(ret.ToArray());
@@ -58,7 +58,7 @@ namespace math_parser.tokenizer
         public static ExprResult operator -(ExprResult curr) => -1 * curr;
         public static ExprResult operator -(ExprResult left, ExprResult right) => left + (-right);
 
-        public static ExprResult operator *(Fraction scalar, ExprResult right) => new ExprResult(right.terms.Select(x => new Term(scalar * x.coefficient, x.term_name)).ToArray());
+        public static ExprResult operator *(Fraction scalar, ExprResult right) => new ExprResult(right.Terms.Select(x => new Term(scalar * x.Coefficient, x.TermName)).ToArray());
 
         public static ExprResult operator *(ExprResult left, ExprResult right)
         {
@@ -69,16 +69,16 @@ namespace math_parser.tokenizer
             ExprResult curr = new ExprResult(new Term[] { });
             if (left.isIntegerOnly())
             {
-                foreach (Term tLeft in left.terms)
+                foreach (Term tLeft in left.Terms)
                 {
-                    curr += tLeft.coefficient * right;
+                    curr += tLeft.Coefficient * right;
                 }
             }
             else if (right.isIntegerOnly())
             {
-                foreach (Term tRight in right.terms)
+                foreach (Term tRight in right.Terms)
                 {
-                    curr += tRight.coefficient * left;
+                    curr += tRight.Coefficient * left;
                 }
             }
             return curr;
@@ -91,7 +91,7 @@ namespace math_parser.tokenizer
             {
                 throw new InvalidOperationException("Only divide by value is allowed");
             }
-            Fraction total = right.terms.Select(x => x.coefficient).Sum();
+            Fraction total = right.Terms.Select(x => x.Coefficient).Sum();
 
             if (total == 0)
             {
@@ -101,7 +101,7 @@ namespace math_parser.tokenizer
         }
 
 
-        public ExprResult Clone() => new ExprResult(terms.ToArray());
+        public ExprResult Clone() => new ExprResult(Terms.ToArray());
 
         public ExprResult Add(ExprResult right)
         {
@@ -140,22 +140,22 @@ namespace math_parser.tokenizer
         {
             var sb = new StringBuilder();
             sb.Append($"{ParseResultExtensions.Indent(indent)}ExprResult: ");
-            for (int i = 0; i < terms.Length; i++)
+            for (int i = 0; i < Terms.Length; i++)
             {
-                sb.Append($"({terms[i].coefficient}, '{terms[i].term_name}')");
-                if (i < terms.Length - 1) sb.Append(" + ");
+                sb.Append($"({Terms[i].Coefficient}, '{Terms[i].TermName}')");
+                if (i < Terms.Length - 1) sb.Append(" + ");
             }
             sb.AppendLine();
             return sb.ToString();
         }
     }
 
-    public class ASTExprResult : ASTValue1<ExprResult>
+    public class AstExprResult : AstValue1<ExprResult>
     {
-        public ASTExprResult(ExprResult result) : base(result) { }
+        public AstExprResult(ExprResult result) : base(result) { }
 
     }
-    
+
     public class PrattParseError : Exception
     {
         public PrattParseError(string info) : base(info) {}
@@ -163,7 +163,7 @@ namespace math_parser.tokenizer
 
     public class Expression : Group<ParseResult, ExprResult>
     {
-        public static readonly Dictionary<ArithematicSymbolAtom, (int, int)> binding_power = new Dictionary<ArithematicSymbolAtom, (int, int)>()
+        public static readonly Dictionary<ArithematicSymbolAtom, (int, int)> BindingPower = new Dictionary<ArithematicSymbolAtom, (int, int)>()
         {
             {ArithematicSymbolAtom.Add, (1, 2) },
             {ArithematicSymbolAtom.Sub, (1, 2) },
@@ -230,7 +230,7 @@ namespace math_parser.tokenizer
                             ),
                             new TokenSequence<ParseResult>(
                                 new Maybe<ParseResult>(new OppoSign()),
-                                new VariableAtom(), 
+                                new VariableAtom(),
                                 new Maybe<ParseResult>(
                                     new Bracketed<ExprResult>(new LazyExpression())
                                 )
@@ -296,7 +296,7 @@ namespace math_parser.tokenizer
                 List<MathAtomResult> curr = new List<MathAtomResult>();
                 if (result is TokenSequenceResult<ParseResult> seqResult)
                 {
-                    foreach (ParseResult r in seqResult.parseResult)
+                    foreach (ParseResult r in seqResult.ParseResult)
                     {
                         curr.AddRange(Recur(r));
                     }
@@ -325,54 +325,54 @@ namespace math_parser.tokenizer
 
             List<Atom> atoms = new List<Atom>();
 
-            var parseTree = inner_token.Parse(stream);
+            var parseTree = InnerToken.Parse(stream);
             //Console.WriteLine("--- Parse Tree ---");
             //Console.WriteLine(parseTree.Print());
             //Console.WriteLine("------------------");
-            List<MathAtomResult> linear_parse = Recur(parseTree);
+            List<MathAtomResult> linearParse = Recur(parseTree);
 
-            bool last_is_value = false;
-            foreach (MathAtomResult result in linear_parse)
+            bool lastIsValue = false;
+            foreach (MathAtomResult result in linearParse)
             {
                 if (result is OppoSignResult)
                 {
                     atoms.Add(new Value((ExprResult)(Term)(Fraction)(-1)));
                     atoms.Add(ArithematicSymbolAtom.StongMul);
-                    last_is_value = false;
+                    lastIsValue = false;
                 }
                 else if (result is NumberResult num)
                 {
-                    if (last_is_value)
+                    if (lastIsValue)
                     {
                         atoms.Add(ArithematicSymbolAtom.Mul);
                     }
-                    last_is_value = true;
+                    lastIsValue = true;
                     atoms.Add(new Value((Term)num.AsFraction()));
                 }
                 else if (result is MathLiteralResult literal)
                 {
-                    if (matcher.ContainsKey(literal.literal))
+                    if (matcher.ContainsKey(literal.Literal))
                     {
-                        last_is_value = false;
-                        atoms.Add(matcher[literal.literal]);
+                        lastIsValue = false;
+                        atoms.Add(matcher[literal.Literal]);
                     }
                     else
                     {
-                        if (last_is_value)
+                        if (lastIsValue)
                         {
                             atoms.Add(ArithematicSymbolAtom.Mul);
                         }
-                        last_is_value = true;
-                        atoms.Add(new Value((Term)(1, literal.literal)));
+                        lastIsValue = true;
+                        atoms.Add(new Value((Term)(1, literal.Literal)));
                     }
                 }
                 else if (result is ExprResult expr)
                 {
-                    if (last_is_value)
+                    if (lastIsValue)
                     {
                         atoms.Add(ArithematicSymbolAtom.Mul);
                     }
-                    last_is_value = true;
+                    lastIsValue = true;
                     atoms.Add(new Value(expr));
                 }
             }
@@ -403,41 +403,41 @@ namespace math_parser.tokenizer
         }
         // Core Dumped, ‘This Simple Algorithm Powers Real Interpreters: Pratt Parsing’, YouTube. Accessed: May 23, 2025. [Online]. Available: https://youtu.be/0c8b7YfsBKJs
         // 12:45
-        public static IASTNode<ExprResult> ParseExpr(Queue<Atom> tokens, int minBindingPower) // 
+        public static IastNode<ExprResult> ParseExpr(Queue<Atom> tokens, int minBindingPower) //
         {
-            Atom next_lhs = tokens.Dequeue();
-            if (!(next_lhs is Value))
+            Atom nextLhs = tokens.Dequeue();
+            if (!(nextLhs is Value))
             {
                 throw new PrattParseError("Failed lhs parse lhs");
             }
-            IASTNode<ExprResult> lhs = new ASTValue1<ExprResult>(((Value)next_lhs).inner);
+            IastNode<ExprResult> lhs = new AstValue1<ExprResult>(((Value)nextLhs).Inner);
             do
             {
                 if (tokens.Count == 0)
                 {
                     break;
                 }
-                Atom next_op = tokens.Peek();
-                if (!(next_op is ArithematicSymbolAtom))
+                Atom nextOp = tokens.Peek();
+                if (!(nextOp is ArithematicSymbolAtom))
                 {
-                    throw new PrattParseError($"Failed lhs parse op, atom: {next_op}");
+                    throw new PrattParseError($"Failed lhs parse op, atom: {nextOp}");
                 }
-                ArithematicSymbolAtom op_raw = (ArithematicSymbolAtom)next_op;
-                (int leftBindingPower, int rightBindingPower) = binding_power[(ArithematicSymbolAtom)next_op];
+                ArithematicSymbolAtom opRaw = (ArithematicSymbolAtom)nextOp;
+                (int leftBindingPower, int rightBindingPower) = BindingPower[(ArithematicSymbolAtom)nextOp];
                 if (leftBindingPower < minBindingPower)
                 {
                     break;
                 }
                 tokens.Dequeue(); // Consume the operator now.
-                IASTNode<ExprResult> rhs = ParseExpr(tokens, rightBindingPower);
-                lhs = new Dictionary<ArithematicSymbolAtom, IASTNode<ExprResult>>
+                IastNode<ExprResult> rhs = ParseExpr(tokens, rightBindingPower);
+                lhs = new Dictionary<ArithematicSymbolAtom, IastNode<ExprResult>>
                 {
-                    { ArithematicSymbolAtom.Add, new ASTAdd<ExprResult>(lhs, rhs)},
-                    { ArithematicSymbolAtom.Sub, new ASTSub<ExprResult>(lhs, rhs)},
-                    { ArithematicSymbolAtom.Mul, new ASTMul<ExprResult>(lhs, rhs)},
-                    { ArithematicSymbolAtom.Div, new ASTDiv<ExprResult>(lhs, rhs)},
-                    { ArithematicSymbolAtom.StongMul, new ASTMul<ExprResult>(lhs, rhs)}
-                }[op_raw];
+                    { ArithematicSymbolAtom.Add, new AstAdd<ExprResult>(lhs, rhs)},
+                    { ArithematicSymbolAtom.Sub, new AstSub<ExprResult>(lhs, rhs)},
+                    { ArithematicSymbolAtom.Mul, new AstMul<ExprResult>(lhs, rhs)},
+                    { ArithematicSymbolAtom.Div, new AstDiv<ExprResult>(lhs, rhs)},
+                    { ArithematicSymbolAtom.StongMul, new AstMul<ExprResult>(lhs, rhs)}
+                }[opRaw];
             } while (true);
             return lhs;
         }
@@ -449,26 +449,26 @@ namespace math_parser.tokenizer
 
         public override ExprResult Parse(CharacterStream stream)
         {
-            Expression inner_token = new Expression();
-            return inner_token.Parse(stream);
+            Expression innerToken = new Expression();
+            return innerToken.Parse(stream);
         }
 
         public override CharacterStream PartialParse(CharacterStream stream)
         {
-            Expression inner_token = new Expression();
-            return inner_token.PartialParse(stream);
+            Expression innerToken = new Expression();
+            return innerToken.PartialParse(stream);
         }
 
         public override bool CanParse(CharacterStream stream)
         {
-            Expression inner_token = new Expression();
-            return inner_token.CanParse(stream);
+            Expression innerToken = new Expression();
+            return innerToken.CanParse(stream);
         }
 
         public override bool CanPartialParse(CharacterStream stream)
         {
-            Expression inner_token = new Expression();
-            return inner_token.CanPartialParse(stream);
+            Expression innerToken = new Expression();
+            return innerToken.CanPartialParse(stream);
         }
     }
 }
