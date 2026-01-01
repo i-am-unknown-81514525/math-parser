@@ -57,31 +57,36 @@ namespace math_parser.tokenizer
                     new Literal("")
                 ),
                 new OrNoBacktrack<ParseResult>(
-                    new Literal("1"),
-                    new Literal("2"),
-                    new Literal("3"),
-                    new Literal("4"),
-                    new Literal("5"),
-                    new Literal("6"),
-                    new Literal("7"),
-                    new Literal("8"),
-                    new Literal("9")
-                ),
-                new Repeat<ParseResult>(
-                    new OrNoBacktrack<ParseResult>(
-                        new Literal("0"),
-                        new Literal("1"),
-                        new Literal("2"),
-                        new Literal("3"),
-                        new Literal("4"),
-                        new Literal("5"),
-                        new Literal("6"),
-                        new Literal("7"),
-                        new Literal("8"),
-                        new Literal("9")
-                    ),
-                    0,
-                    Amount.Unbound
+                    new Literal("0"),
+                    new TokenSequence<ParseResult>(
+                        new OrNoBacktrack<ParseResult>(
+                            new Literal("1"),
+                            new Literal("2"),
+                            new Literal("3"),
+                            new Literal("4"),
+                            new Literal("5"),
+                            new Literal("6"),
+                            new Literal("7"),
+                            new Literal("8"),
+                            new Literal("9")
+                        ),
+                        new Repeat<ParseResult>(
+                            new OrNoBacktrack<ParseResult>(
+                                new Literal("0"),
+                                new Literal("1"),
+                                new Literal("2"),
+                                new Literal("3"),
+                                new Literal("4"),
+                                new Literal("5"),
+                                new Literal("6"),
+                                new Literal("7"),
+                                new Literal("8"),
+                                new Literal("9")
+                            ),
+                            0,
+                            Amount.Unbound
+                        )
+                    )
                 ),
                 new Maybe<ParseResult>(
                     new TokenSequence<ParseResult>(
@@ -124,7 +129,7 @@ namespace math_parser.tokenizer
                                 new Literal("8"),
                                 new Literal("9")
                             ),
-                            0,
+                            1,
                             Amount.Unbound
                         )
                     )
