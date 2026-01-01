@@ -122,6 +122,10 @@ namespace math_parser.tokenizer
                         TS v;
                         v = _token.Parse(curr);
                         results.Add(v);
+                        if (last.ptr == curr.ptr)
+                        {
+                            return results;
+                        }
                         last.JumpForwardTo(curr);
                     }
                     catch (TokenParseException)
