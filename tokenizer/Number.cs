@@ -110,7 +110,7 @@ namespace math_parser.tokenizer
                                 ),
                                 new Repeat<ParseResult>(
                                     new Literal("0"),
-                                    0,
+                                    1,
                                     Amount.Unbound
                                 )
                             ),
